@@ -1,8 +1,8 @@
-#Regex
+# Regex
 
-#basic cheatsheet
+# basic cheatsheet
 
-#Anchors
+# Anchors
 ```
 * ^ -> Start of line
 * \A -> Start of string
@@ -14,7 +14,7 @@
 * \> End of word
 ```
 
-#Character classes
+# Character classes
 ```
 \c -> Control character
 \s -> White space
@@ -28,7 +28,7 @@
 \Oxxx -> Octal Character
 ```
 
-#Regex for exercises
+# Exercises
 Text 1:
 * Words that start by wowel:
 ```
