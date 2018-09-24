@@ -36,5 +36,18 @@ Text 1:
 ```
 * Words that start by wovel and have a preposition 'a':
 ```
-\b[aeiou] \w*
+(\b[a]\s\w*[aeiou](\w*))
+```
+* Words that start with upper letter and have a dot before
+```
+(\b[.][A-Z])
+```
+Text 2:
+* Words that have a special character (áéíóú)
+```
+(\b\w*[áéíóú]\w*)
+```
+* Check percentages
+```
+(\b\w*[%$])
 ```
