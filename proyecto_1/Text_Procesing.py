@@ -26,7 +26,7 @@ class Text_Processing:
         """
         tokens = []
         for review in reviews:
-            token = word_tokenize(text=review)
+            token = word_tokenize(text=review, language='spanish')
             tokens.append(token)
         return tokens
 

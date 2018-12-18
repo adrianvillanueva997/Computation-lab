@@ -42,7 +42,6 @@ class File_Manager:
         :param file_path:
         :return: string
         """
-        file_content = ''
         with open(file_path, 'r', encoding='utf-8') as file:
             file_content = file.read()
         return file_content
