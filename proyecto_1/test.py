@@ -1,68 +1,63 @@
-from proyecto_1 import File_Manager, Text_Procesing
-from sklearn.feature_extraction.text import CountVectorizer
-from sklearn.feature_extraction.text import TfidfVectorizer
-from sklearn.feature_extraction.text import HashingVectorizer
 from sklearn.model_selection import train_test_split
+
+from proyecto_1 import File_Manager, Text_Procesing
 import pandas as pd
-from sklearn.feature_extraction.text import CountVectorizer
-from sklearn.naive_bayes import GaussianNB
-from sklearn.neighbors import KNeighborsClassifier
 
 if __name__ == '__main__':
     # /home/xiao/datasets/proyecto_computacion/dataset_entrenamiento/buenas/
     # /home/xiao/Documents/proyecto_Comp1/dataset_entrenamiento/buenas/
-    fm = File_Manager.File_Manager(path='/home/xiao/Documents/proyecto_Comp1/dataset_entrenamiento/buenas/')
-    reviews = fm.extract_data_from_files()
-    tp = Text_Procesing.Text_Processing(reviews)
-    processed_reviews = tp.process_reviews()
-    print(processed_reviews)
+    fm = File_Manager.File_Manager(path='/home/xiao/datasets/proyecto_computacion/dataset_entrenamiento/buenas/')
+    good_reviews = fm.extract_data_from_files()
+    tp = Text_Procesing.Text_Processing(good_reviews)
+    g_processed_reviews = tp.process_reviews()
+    print(g_processed_reviews)
 
-    names = ['text', 'label']
-    df = pd.DataFrame(columns=names)
+    fm = File_Manager.File_Manager(path='/home/xiao/datasets/proyecto_computacion/dataset_entrenamiento/malas/')
+    bad_reviews = fm.extract_data_from_files()
+    tp = Text_Procesing.Text_Processing(bad_reviews)
+    b_processed_reviews = tp.process_reviews()
+    print(b_processed_reviews)
 
-    df = df.append(pd.DataFrame(processed_reviews, columns=['text']), sort=False)
-    for col in df.columns():
-        df.loc[df[col] == 'label', col] = 0
+    fm = File_Manager.File_Manager(path='/home/xiao/datasets/proyecto_computacion/dataset_entrenamiento/neutras/')
+    neutral_reviews = fm.extract_data_from_files()
+    tp = Text_Procesing.Text_Processing(neutral_reviews)
+    n_processed_reviews = tp.process_reviews()
+    print(n_processed_reviews)
+
+    fm = File_Manager.File_Manager(path='/home/xiao/datasets/proyecto_computacion/dataset_entrenamiento/unlabeled/')
+    unlabeled_reviews = fm.extract_data_from_files()
+    tp = Text_Procesing.Text_Processing(unlabeled_reviews)
+    u_processed_reviews = tp.process_reviews()
+    print(u_processed_reviews)
+
+    data = {
+        'reviews': [],
+        'label': [],
+    }
+    for review in g_processed_reviews:
+        data['reviews'].append(review)
+        data['label'].append(1)
+
+    for review in b_processed_reviews:
+        data['reviews'].append(review)
+        data['label'].append(2)
+
+    for review in n_processed_reviews:
+        data['reviews'].append(review)
+        data['label'].append(3)
+
+    for review in u_processed_reviews:
+        data['reviews'].append(review)
+        data['label'].append(0)
+
+    df = pd.DataFrame(data)
+
     print(df)
+    print(df.shape)
+    X_train, X_test, y_train, y_test = train_test_split(data['reviews'], data['label'], test_size=0.1, random_state=10)
 
-"""
-cv = CountVectorizer(tokenizer=None, stop_words=None)
-    cv.fit(processed_reviews)
-    print(cv.vocabulary_)
-    encode = cv.transform(processed_reviews)
-    print(encode)
-    print(type(encode))
-    data = encode.toarray()
-    X_train, X_test, y_train, y_test = train_test_split(data, 1, test_size=0.1, random_state=69)
+    print(X_train)
     print(X_test)
-tv = TfidfVectorizer()
-    tv.fit(processed_reviews)
-    vector = tv.transform(processed_reviews)
-    print(vector.shape)
-    print(vector.toarray())
+    print(y_train)
+    print(y_test)
 
-    vec = HashingVectorizer(n_features=10)
-    content = vec.transform(processed_reviews)
-    print(content.shape)
-    print(content.toarray())
-    
-
-
-X = ['the food was really delicious', 'the food was really terrible']
-
-y = [5, 2]
-x_data = CountVectorizer().fit_transform(X)
-gnb = GaussianNB()
-a = gnb.fit(x_data.toarray(), y)
-print(a)
-
-Z = ['the food was awesome', 'the food was pretty bad']
-z_data = CountVectorizer().fit_transform(Z)
-gnb.fit(z_data.toarray(), y)
-b = gnb.predict(z_data.toarray())
-print(b)
-c = gnb.predict_proba(z_data.toarray())
-print(c)
-
-
-"""
