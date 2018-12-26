@@ -24,11 +24,6 @@ if __name__ == '__main__':
     n_processed_reviews = tp.process_reviews()
     print(n_processed_reviews)
 
-    fm = File_Manager.File_Manager(path='/home/xiao/datasets/proyecto_computacion/dataset_entrenamiento/unlabeled/')
-    unlabeled_reviews = fm.extract_data_from_files()
-    tp = Text_Procesing.Text_Processing(unlabeled_reviews)
-    u_processed_reviews = tp.process_reviews()
-    print(u_processed_reviews)
 
     data = {
         'reviews': [],
@@ -45,10 +40,6 @@ if __name__ == '__main__':
     for review in n_processed_reviews:
         data['reviews'].append(review)
         data['label'].append(3)
-
-    for review in u_processed_reviews:
-        data['reviews'].append(review)
-        data['label'].append(0)
 
     df = pd.DataFrame(data)
 
