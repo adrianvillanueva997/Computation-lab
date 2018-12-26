@@ -6,7 +6,7 @@ from kivy.core.window import Window
 from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen
 
-view = Builder.load_file("MainScreenView.kv")
+view = Builder.load_file("main_screen_view.kv")
 
 class MainScreen(Screen):
 
@@ -21,3 +21,4 @@ class MainScreen(Screen):
 
     def goto_help(self):
         pass
+
