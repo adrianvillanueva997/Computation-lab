@@ -1,7 +1,11 @@
+from sklearn.feature_extraction.text import CountVectorizer, TfidfTransformer
 from sklearn.model_selection import train_test_split
-
+from sklearn.naive_bayes import MultinomialNB
+import numpy as np
 from proyecto_1 import File_Manager, Text_Procesing
 import pandas as pd
+from sklearn.metrics import confusion_matrix
+from sklearn import metrics
 
 if __name__ == '__main__':
     # /home/xiao/datasets/proyecto_computacion/dataset_entrenamiento/buenas/
@@ -24,7 +28,6 @@ if __name__ == '__main__':
     n_processed_reviews = tp.process_reviews()
     print(n_processed_reviews)
 
-
     data = {
         'reviews': [],
         'label': [],
@@ -45,10 +48,23 @@ if __name__ == '__main__':
 
     print(df)
     print(df.shape)
-    X_train, X_test, y_train, y_test = train_test_split(data['reviews'], data['label'], test_size=0.1, random_state=10)
+    count_vectorizer = CountVectorizer()
+    vectorized_reviews = count_vectorizer.fit_transform(data['reviews'])
+    transformer = TfidfTransformer().fit(vectorized_reviews)
+    counts = transformer.transform(vectorized_reviews)
+    X_train, X_test, y_train, y_test = train_test_split(vectorized_reviews, data['label'], test_size=0.1,
+                                                        random_state=10)
 
     print(X_train)
     print(X_test)
     print(y_train)
     print(y_test)
+    model = MultinomialNB(alpha=0.01)
+    model.fit(X_train, y_train)
+    print(model)
+
+    predicted = model.predict(X_test)
+
+    print(np.mean(predicted == y_test))
+    print(confusion_matrix(y_test, predicted))
 
