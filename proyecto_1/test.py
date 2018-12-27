@@ -1,11 +1,11 @@
 from sklearn.feature_extraction.text import CountVectorizer, TfidfTransformer
-from sklearn.model_selection import train_test_split
+from sklearn.model_selection import train_test_split, learning_curve, ShuffleSplit
 from sklearn.naive_bayes import MultinomialNB
 import numpy as np
 from proyecto_1 import File_Manager, Text_Procesing
 import pandas as pd
 from sklearn.metrics import confusion_matrix
-from sklearn import metrics
+from scikit_testing import plotter
 
 if __name__ == '__main__':
     # /home/xiao/datasets/proyecto_computacion/dataset_entrenamiento/buenas/
@@ -68,3 +68,9 @@ if __name__ == '__main__':
     print(np.mean(predicted == y_test))
     print(confusion_matrix(y_test, predicted))
 
+    cv = ShuffleSplit(n_splits=100, test_size=0.2, random_state=0)
+    title = 'learning curve'
+    curve = learning_curve(model, X_train, y_train)
+
+    a = plotter.plot_learning_curve(model, 'Learning curve', X_test, y_test, cv=cv, n_jobs=4, ylim=(0, 1))
+    a.show()
