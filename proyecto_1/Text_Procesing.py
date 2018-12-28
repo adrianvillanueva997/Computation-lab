@@ -22,7 +22,7 @@ class Text_Processing:
         """
         Tokenization process, recieves a list of reviews and returns a list with a list of tokens for each review
         :param reviews:
-        :return list:
+        :return : list
         """
         tokens = []
         for review in reviews:
@@ -35,7 +35,7 @@ class Text_Processing:
         """
         Removal of stop words and punctuation
         :param tokens:
-        :return list:
+        :return :list
         """
         filtered_reviews = []
         stop_words = set(stopwords.words('spanish'))
@@ -50,7 +50,7 @@ class Text_Processing:
         """
         Stemmer, must receive a list of filtered reviews, otherwise it won't work as expected
         :param filtered_reviews:
-        :return list:
+        :return:list
         """
         stemmer = SnowballStemmer('spanish')
         stemmed_reviews = []
@@ -61,7 +61,7 @@ class Text_Processing:
     def process_reviews(self):
         """
         Public function that does all the NLP process
-        :return list:
+        :return:list
         """
         lower_reviews = [word.lower() for word in self.reviews]
         tokens = self.__tokenizer(lower_reviews)
@@ -73,10 +73,13 @@ class Text_Processing:
     def graph_reviews(self):
         """
         Dani didn't want this graph, but it may be useful (or not), returns a frequency word distribution graph
-        :return plot:
+        :return: plot
         """
         processed_reviews = self.process_reviews()
         fdist = FreqDist(processed_reviews)
         print(fdist)
         fdist.plot(30, cumulative=False)
         return fdist
+
+    def transform_data(self, processed_reviews):
+        pass
