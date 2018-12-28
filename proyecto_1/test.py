@@ -21,15 +21,15 @@ if __name__ == '__main__':
     n_processed_reviews = tp.process_reviews()
     print(n_processed_reviews)
 
-    vectorizer = Vectorizer.Vectorizer()
-    df = vectorizer.generate_dataframe(g_processed_reviews, b_processed_reviews, n_processed_reviews)
-    vectorized_reviews = vectorizer.count_vectorizer(df)
-    X_train, X_test, y_train, y_test = vectorizer.generate_train_test_data(vectorized_reviews)
+    vectorizer = Vectorizer.Vectorizer(g_processed_reviews, b_processed_reviews, n_processed_reviews)
+    vectorizer.generate_dataframe()
+    vectorizer.count_vectorizer()
+    X_train, X_test, y_train, y_test = vectorizer.generate_train_test_data()
     models = Models.Models(X_train, y_train, X_test, y_test)
     probability, conf_matrix = models.multinomial_naive_bayes()
 
     print(probability)
     print(conf_matrix)
 
-    plot = models.generate_plot_learning_curve(title="Learning Curve", X=X_test, y=y_test)
+    plot = models.generate_plot_learning_curve(title="Learning Curve", X=X_train, y=y_train)
     plot.show()

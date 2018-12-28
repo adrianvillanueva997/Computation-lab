@@ -8,76 +8,67 @@ class Vectorizer:
     Class that does all the vectorization and generation process of the whole data frame and the test/train slitted data
     """
 
-    def __init__(self):
+    def __init__(self, g_reviews, b_reviews, n_reviews):
         """
         Class constructor
         """
-        self.dataframe = pd.DataFrame()
+        self.__data_frame = pd.DataFrame()
+        self.__g_reviews = g_reviews
+        self.__b_reviews = b_reviews
+        self.__n_reviews = n_reviews
+        self.__vectorized_reviews = None
 
-    def generate_dataframe(self, g_reviews, b_reviews, n_reviews):
+    def generate_dataframe(self):
         """
         Generates and returns a data frame given the previously preprocessed reviews
         :param g_reviews:
         :param b_reviews:
         :param n_reviews:
-        :return: dataframe
         """
         data = {
             'reviews': [],
             'labels': []
         }
 
-        for review in g_reviews:
+        for review in self.__g_reviews:
             data['reviews'].append(review)
             data['labels'].append(1)
 
-        for review in b_reviews:
+        for review in self.__b_reviews:
             data['reviews'].append(review)
             data['labels'].append(2)
 
-        for review in n_reviews:
+        for review in self.__n_reviews:
             data['reviews'].append(review)
             data['labels'].append(3)
 
-        dataframe = pd.DataFrame(data)
-        self.dataframe = dataframe
-        return dataframe
+        self.__data_frame = pd.DataFrame(data)
 
-    @staticmethod
-    def count_vectorizer(dataframe):
+    def count_vectorizer(self):
         """
         Convert a collection of text documents to a matrix of token counts
-        :return:
-        :param dataframe:
-        :return:vectorized_reviews
         """
         cv = CountVectorizer()
-        vectorized_reviews = cv.fit_transform(dataframe['reviews'])
-        return vectorized_reviews
+        vectorized_reviews = cv.fit_transform(self.__data_frame['reviews'])
+        self.__vectorized_reviews = vectorized_reviews
 
-    @staticmethod
-    def term_frequency_vectorizer(dataframe):
+    def term_frequency_vectorizer(self):
         """
         Convert a collection of text documents to a matrix of token occurrences
-        :param dataframe:
-        :return: vectorized_reviews
         """
         tf = TfidfVectorizer()
-        vectorized_reviews = tf.fit_transform(dataframe['reviews'])
-        return vectorized_reviews
+        vectorized_reviews = tf.fit_transform(self.__data_frame['reviews'])
+        self.__vectorized_reviews = vectorized_reviews
 
-    @staticmethod
-    def hash_vectorizer(dataframe):
+    def hash_vectorizer(self):
         """
         Convert a collection of raw documents to a matrix of TF-IDF features.
-        :param dataframe:
-        :return:vectorized_reviews
         """
         hs = HashingVectorizer()
-        vectorized_reviews = hs.fit_transform(dataframe['reviews'])
-        return vectorized_reviews
+        vectorized_reviews = hs.fit_transform(self.__data_frame['reviews'])
+        self.__vectorized_reviews = vectorized_reviews
 
-    def generate_train_test_data(self, vectorized_reviews, test_size=0.1, random_state=None,
+    def generate_train_test_data(self, test_size=0.1, random_state=None,
                                  train_size=None):
         """
         Generate train/test data given some vectorized reviews
@@ -89,9 +80,9 @@ class Vectorizer:
         :param random_state:
         :return: X_train, X_test, y_train, y_test
         """
-        X_train, X_test, y_train, y_test = train_test_split(vectorized_reviews, self.dataframe['labels'],
+        x_train, x_test, y_train, y_test = train_test_split(self.__vectorized_reviews, self.__data_frame['labels'],
                                                             test_size=test_size,
                                                             random_state=random_state,
                                                             train_size=train_size)
 
-        return X_train, X_test, y_train, y_test
+        return x_train, x_test, y_train, y_test
