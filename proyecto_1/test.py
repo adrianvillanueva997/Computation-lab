@@ -23,10 +23,10 @@ if __name__ == '__main__':
 
     vectorizer = Vectorizer.Vectorizer(g_processed_reviews, b_processed_reviews, n_processed_reviews)
     vectorizer.generate_dataframe()
-    vectorizer.count_vectorizer()
+    vectorizer.count_vectorizer(to_array=False)
     X_train, X_test, y_train, y_test = vectorizer.generate_train_test_data()
     models = Models.Models(X_train, y_train, X_test, y_test)
-    probability, conf_matrix = models.multinomial_naive_bayes()
+    probability, conf_matrix = models.svm_support_vector_classification()
 
     print(probability)
     print(conf_matrix)

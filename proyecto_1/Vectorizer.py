@@ -44,29 +44,38 @@ class Vectorizer:
 
         self.__data_frame = pd.DataFrame(data)
 
-    def count_vectorizer(self):
+    def count_vectorizer(self, to_array=True):
         """
         Convert a collection of text documents to a matrix of token counts
         """
         cv = CountVectorizer()
         vectorized_reviews = cv.fit_transform(self.__data_frame['reviews'])
-        self.__vectorized_reviews = vectorized_reviews
+        if to_array:
+            self.__vectorized_reviews = vectorized_reviews.toarray()
+        else:
+            self.__vectorized_reviews = vectorized_reviews
 
-    def term_frequency_vectorizer(self):
+    def term_frequency_vectorizer(self, to_array=True):
         """
         Convert a collection of text documents to a matrix of token occurrences
         """
         tf = TfidfVectorizer()
         vectorized_reviews = tf.fit_transform(self.__data_frame['reviews'])
-        self.__vectorized_reviews = vectorized_reviews
+        if to_array:
+            self.__vectorized_reviews = vectorized_reviews.toarray()
+        else:
+            self.__vectorized_reviews = vectorized_reviews
 
-    def hash_vectorizer(self):
+    def hash_vectorizer(self, to_array=True):
         """
         Convert a collection of raw documents to a matrix of TF-IDF features.
         """
         hs = HashingVectorizer()
         vectorized_reviews = hs.fit_transform(self.__data_frame['reviews'])
-        self.__vectorized_reviews = vectorized_reviews
+        if to_array:
+            self.__vectorized_reviews = vectorized_reviews.toarray()
+        else:
+            self.__vectorized_reviews = vectorized_reviews
 
     def generate_train_test_data(self, test_size=0.1, random_state=None,
                                  train_size=None):

@@ -1,8 +1,17 @@
+from sklearn.ensemble import GradientBoostingClassifier
+from sklearn.gaussian_process import GaussianProcessClassifier
+from sklearn.linear_model import SGDClassifier
 from sklearn.metrics import confusion_matrix
 from sklearn.model_selection import learning_curve
-from sklearn.naive_bayes import MultinomialNB
+from sklearn.naive_bayes import MultinomialNB, BernoulliNB, GaussianNB
 import matplotlib.pyplot as plt
 import numpy as np
+from sklearn.neighbors import KNeighborsClassifier, RadiusNeighborsClassifier
+from sklearn.neural_network import MLPClassifier
+from sklearn.svm import SVC, NuSVC, LinearSVC
+from sklearn.tree import DecisionTreeClassifier
+import graphviz
+import sklearn.tree as tree
 
 
 class Models:
@@ -20,7 +29,7 @@ class Models:
         self.__y_train = y_train
         self.__y_test = y_test
 
-    def multinomial_naive_bayes(self, alpha=1.0, fit_prior=True):
+    def naive_bayes_multinomial(self, alpha=1.0, fit_prior=True):
         """
         Multinomial naive bayes model from sklearn
         :param alpha:
@@ -28,6 +37,90 @@ class Models:
         :return: probability, conf_matrix
         """
         model = MultinomialNB(alpha=alpha, fit_prior=fit_prior)
+        model.fit(self.__x_train, self.__y_train)
+        self.__model = model
+        probability, conf_matrix = self.__generate_prediction()
+        return probability, conf_matrix
+
+    def naive_bayes_bernouilli(self, ):
+        model = BernoulliNB()
+        model.fit(self.__x_train, self.__y_train)
+        self.__model = model
+        probability, conf_matrix = self.__generate_prediction()
+        return probability, conf_matrix
+
+    def naive_bayes_gaussian(self):
+        model = GaussianNB()
+        model.fit(self.__x_train, self.__y_train)
+        self.__model = model
+        probability, conf_matrix = self.__generate_prediction()
+        return probability, conf_matrix
+
+    def tree_decision(self):
+        model = DecisionTreeClassifier()
+        model.fit(self.__x_train, self.__y_train)
+        self.__model = model
+        probability, conf_matrix = self.__generate_prediction()
+        return probability, conf_matrix
+
+    def gradient_booster(self):
+        model = GradientBoostingClassifier()
+        model.fit(self.__x_train, self.__y_train)
+        self.__model = model
+        probability, conf_matrix = self.__generate_prediction()
+        return probability, conf_matrix
+
+    def gradient_stochastic_descent(self):
+        model = SGDClassifier()
+        model.fit(self.__x_train, self.__y_train)
+        self.__model = model
+        probability, conf_matrix = self.__generate_prediction()
+        return probability, conf_matrix
+
+    def k_neighbors_classifier(self):
+        model = KNeighborsClassifier()
+        model.fit(self.__x_train, self.__y_train)
+        self.__model = model
+        probability, conf_matrix = self.__generate_prediction()
+        return probability, conf_matrix
+
+    def r_neighbors_classifier(self):
+        model = RadiusNeighborsClassifier()
+        model.fit(self.__x_train, self.__y_train)
+        self.__model = model
+        probability, conf_matrix = self.__generate_prediction()
+        return probability, conf_matrix
+
+    def svm_support_vector_classification(self, C=1.0, kernel='rbf', degree=3, gamma='auto'):
+        model = SVC(C=C, kernel=kernel, degree=degree, gamma=gamma)
+        model.fit(self.__x_train, self.__y_train)
+        self.__model = model
+        probability, conf_matrix = self.__generate_prediction()
+        return probability, conf_matrix
+
+    def svm_support_vector_nu_classification(self):
+        model = NuSVC()
+        model.fit(self.__x_train, self.__y_train)
+        self.__model = model
+        probability, conf_matrix = self.__generate_prediction()
+        return probability, conf_matrix
+
+    def svm_support_vector_linear_classification(self):
+        model = LinearSVC()
+        model.fit(self.__x_train, self.__y_train)
+        self.__model = model
+        probability, conf_matrix = self.__generate_prediction()
+        return probability, conf_matrix
+
+    def gaussian_process_classifier(self):
+        model = GaussianProcessClassifier()
+        model.fit(self.__x_train, self.__y_train)
+        self.__model = model
+        probability, conf_matrix = self.__generate_prediction()
+        return probability, conf_matrix
+
+    def sklearn_neural_mlp(self):
+        model = MLPClassifier()
         model.fit(self.__x_train, self.__y_train)
         self.__model = model
         probability, conf_matrix = self.__generate_prediction()
@@ -42,6 +135,11 @@ class Models:
         probability = np.mean(prediction == self.__y_test)
         conf_matrix = confusion_matrix(self.__y_test, prediction)
         return probability, conf_matrix
+
+    def __generate_tree_graph(self):
+        dot_data = tree.export_graphviz(self.__model, out_file=None, filled=True, rounded=True, special_characters=True)
+        graph = graphviz.Source(dot_data)
+        return graph
 
     def generate_plot_learning_curve(self, title, X, y, ylim=None, cv=None, n_jobs=None,
                                      train_sizes=np.linspace(.1, 1.0, 5)):
