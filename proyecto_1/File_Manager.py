@@ -34,6 +34,7 @@ class File_Manager:
             return files
         else:
             print('[INFO] Path is not correct')
+            return None
 
     @staticmethod
     def __read_file(file_path):

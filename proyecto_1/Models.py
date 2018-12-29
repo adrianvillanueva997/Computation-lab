@@ -16,12 +16,12 @@ import sklearn.tree as tree
 
 class Models:
     """
-    Class that will have all the Machine Learning models that the application will use
+    Class that will have all the Machine Learning models that the application will use.
     """
 
     def __init__(self, x_train, y_train, x_test, y_test):
         """
-        Class Constructor
+        Class Constructor.
         """
         self.__model = None
         self.__x_train = x_train
@@ -32,95 +32,306 @@ class Models:
     def naive_bayes_multinomial(self, alpha=1.0, fit_prior=True):
         """
         Multinomial naive bayes model from sklearn
-        :param alpha:
-        :param fit_prior:
+        :param alpha: Smoothing parameter, 0 for no smoothing.
+        :param fit_prior: Whether to learn class prior probabilities or not.
         :return: probability, conf_matrix
         """
-        model = MultinomialNB(alpha=alpha, fit_prior=fit_prior)
+        model = MultinomialNB(alpha=alpha, fit_prior=True)
         model.fit(self.__x_train, self.__y_train)
         self.__model = model
         probability, conf_matrix = self.__generate_prediction()
         return probability, conf_matrix
 
-    def naive_bayes_bernouilli(self, ):
-        model = BernoulliNB()
+    def naive_bayes_bernoulli(self, alpha=1.0, fit_prior=True):
+        """
+        Naive Bayes classifier for multivariate Bernoulli models. MUST USE WITH TO_ARRAY!!
+
+        :param alpha: Smoothing parameter, 0 for no smoothing.
+        :param fit_prior: Whether to learn class prior probabilities or not.
+        :return: probability, conf_matrix
+        """
+        model = BernoulliNB(alpha=alpha, fit_prior=fit_prior)
         model.fit(self.__x_train, self.__y_train)
         self.__model = model
         probability, conf_matrix = self.__generate_prediction()
         return probability, conf_matrix
 
     def naive_bayes_gaussian(self):
+        """
+        Naive Bayes classifier for multivariate Gaussian models.
+        :return: probability, conf_matrix
+        """
         model = GaussianNB()
         model.fit(self.__x_train, self.__y_train)
         self.__model = model
         probability, conf_matrix = self.__generate_prediction()
         return probability, conf_matrix
 
-    def tree_decision(self):
-        model = DecisionTreeClassifier()
+    def tree_decision_classifier(self, criterion='gini', splitter='best', max_depth=None, min_samples_split=2,
+                                 min_samples_leaf=1, min_weight_fraction_leaf=0., max_features=None, random_state=None):
+        """
+        Decision tree classifier
+        :param criterion: Measurement of the quality of a split: Valid inputs:
+                            gini: impurity
+                            entropy: information gain
+        :param splitter: Strategy used to choose the split at each node. Valid inputs:
+                            best: best split.
+                            random: best random split.
+        :param max_depth: Maximum depth of the tree (int or None).
+        :param min_samples_split: Minimum number of samples required to split an internal node.
+        :param min_samples_leaf:  Minimum number of samples required to be at a leaf node.
+        :param min_weight_fraction_leaf: Minimum weighted fraction of the sum total of weights required to be at a leaf node.
+        :param max_features: The number of features to consider when looking for the best split, valid inputs:
+                            int, float, "auto", "sqrt", "log2", None
+        :param random_state: seed used by the random number generator, if it's None, it will use np.Random().
+        :return:probability, conf_matrix
+        """
+        model = DecisionTreeClassifier(criterion=criterion, splitter=splitter, min_samples_leaf=min_samples_leaf,
+                                       min_samples_split=min_samples_split,
+                                       min_weight_fraction_leaf=min_weight_fraction_leaf, max_features=max_features,
+                                       max_depth=max_depth, random_state=random_state)
         model.fit(self.__x_train, self.__y_train)
         self.__model = model
         probability, conf_matrix = self.__generate_prediction()
         return probability, conf_matrix
 
-    def gradient_booster(self):
-        model = GradientBoostingClassifier()
+    def gradient_booster(self, loss='deviance', learning_rate=0.1, n_estimators=100, subsample=0.1,
+                         criterion='friedman_mse', min_samples_split=2, min_samples_leaf=1,
+                         min_weight_fraction_leaf=0, max_depth=3, min_impurity_decrease=0, random_state=None):
+        """
+        GB builds an additive model in a forward stage-wise fashion; it allows for the optimization of
+        arbitrary differentiable loss functions.
+        :param loss: loss function to be optimized, inputs:
+                                deviance: Classification with probabilistic outputs.
+                                exponential: Gradient boosting using AdaBoost algorithm.
+        :param learning_rate: Contribution of each tree.
+        :param n_estimators: Number of boosting stages to perform.
+        :param subsample: Fraction of samples to be used for fitting the base learners.
+        :param criterion: Function to measure the quality of a split, inputs:
+                                friedman_mse: mean squared error.
+                                mae: mean absolute error.
+        :param min_samples_split: Minimum number of samples required to split an internal node.
+        :param min_samples_leaf: Minimum number of samples required to be at leaf node.
+        :param min_weight_fraction_leaf: Minimum weighted fraction of the sum total of weights.
+        :param max_depth: Maximum depth of the individual regression estimators.
+        :param min_impurity_decrease: Minimum value of split.
+        :param random_state: Random seed, if None will use np.random().
+        :return:probability, conf_matrix
+        """
+        model = GradientBoostingClassifier(loss=loss, learning_rate=learning_rate, n_estimators=n_estimators,
+                                           subsample=subsample, criterion=criterion,
+                                           min_samples_split=min_samples_split, min_samples_leaf=min_samples_leaf,
+                                           min_weight_fraction_leaf=min_weight_fraction_leaf, max_depth=max_depth,
+                                           min_impurity_decrease=min_impurity_decrease, random_state=random_state)
         model.fit(self.__x_train, self.__y_train)
         self.__model = model
         probability, conf_matrix = self.__generate_prediction()
         return probability, conf_matrix
 
-    def gradient_stochastic_descent(self):
-        model = SGDClassifier()
+    def gradient_stochastic_descent(self, loss='hinge'):
+        """
+        Linear classifiers (SVM, logistic regression, a.o.) with SGD training.
+        :param loss: loss function to be used, inputs:
+                            linear loss: hinge, log, modified_huber,squared_hinge,
+                            regression loss: squared_loss, huber, epsilon_insensitive, squared_epsilon_insensitive
+        :return:probability, conf_matrix
+        """
+        model = SGDClassifier(loss=loss)
         model.fit(self.__x_train, self.__y_train)
         self.__model = model
         probability, conf_matrix = self.__generate_prediction()
         return probability, conf_matrix
 
-    def k_neighbors_classifier(self):
-        model = KNeighborsClassifier()
+    def k_neighbors_classifier(self, n_neighbours=5, weights='uniform', algorithm='auto', leaf_size=30, p=2,
+                               metric='minkowski'):
+        """
+        Classifier implementing the k-nearest neighbors vote.
+        :param n_neighbours: Number of neighbours to use.
+        :param weights: Weight function used in prediction, inputs:
+                                uniform: All points in each neighborhood are weighted equally.
+                                distance: Weight points by the inverse of their distance, closer points will have a greater influence.
+        :param algorithm: Algorithm used to compute the nearest neighbors, inputs:
+                                ball_tree: Fast generalized N-point problems.
+                                KDTree: Euclidean tree of n-dimensions.
+                                brute: Brute-force search.
+                                auto: Will try to decide the most appropriate algorithm given the fit function.
+        :param leaf_size: Leaf size passed to the three. This can affect the computation speed/time.
+        :param p: Parameter for the Minkwoski metric.
+        :param metric: Distance metric to use for the tree, inputs:
+                                euclidean, manhattan, chebyshev, minkwoski, seuclidean, mahalanobis
+        :return:probability, conf_matrix
+        """
+        model = KNeighborsClassifier(n_neighbors=n_neighbours, weights=weights, algorithm=algorithm,
+                                     leaf_size=leaf_size, p=p, metric=metric)
         model.fit(self.__x_train, self.__y_train)
         self.__model = model
         probability, conf_matrix = self.__generate_prediction()
         return probability, conf_matrix
 
-    def r_neighbors_classifier(self):
-        model = RadiusNeighborsClassifier()
+    def r_neighbors_classifier(self, n_neighbours=5, weights='uniform', algorithm='auto', leaf_size=30, p=2,
+                               metric='minkowski'):
+        """
+        Classifier implementing the k-nearest neighbors radius vote.
+        :param n_neighbours: Number of neighbours to use
+        :param weights: Weight function used in prediction, inputs:
+                                uniform: All points in each neighborhood are weighted equally.
+                                distance: Weight points by the inverse of their distance, closer points will have a greater influence.
+        :param algorithm: Algorithm used to compute the nearest neighbors, inputs:
+                                ball_tree: Fast generalized N-point problems.
+                                KDTree: Euclidean tree of n-dimensions.
+                                brute: Brute-force search.
+                                auto: Will try to decide the most appropriate algorithm given the fit function.
+        :param leaf_size: Leaf size passed to the three. This can affect the computation speed/time.
+        :param p: Parameter for the Minkwoski metric.
+        :param metric: Distance metric to use for the tree, inputs:
+                                euclidean, manhattan, chebyshev, minkwoski, seuclidean, mahalanobis
+        :return:probability, conf_matrix
+        """
+        model = RadiusNeighborsClassifier(n_neighbors=n_neighbours, weights=weights, algorithm=algorithm,
+                                          leaf_size=leaf_size, p=p, metric=metric)
         model.fit(self.__x_train, self.__y_train)
         self.__model = model
         probability, conf_matrix = self.__generate_prediction()
         return probability, conf_matrix
 
-    def svm_support_vector_classification(self, C=1.0, kernel='rbf', degree=3, gamma='auto'):
-        model = SVC(C=C, kernel=kernel, degree=degree, gamma=gamma)
+    def svm_support_vector_classification(self, C=1.0, kernel='rbf', degree=3, gamma='auto', coef0=0, shrinking=True,
+                                          probability=False, max_iter=1):
+        """
+        C-Support Vector Classification.
+
+        :param C: Error penalty
+        :param kernel: Kernel type to use in the algorithm, inputs:
+                                linear, poly, rbf, sigmoid, precomputed
+        :param degree: Degree of the polynomial kernel function (only works if kernel = poly).
+        :param gamma: Kernel coefficient for rbf, poly and sigmoid.
+        :param max_iter: Max limit of iterations, -1 for no limit.
+        :param probability: Whether or not enable probabilities, it will slow down the computation.
+        :param shrinking: whether or not to use shrinking heuristic.
+        :param coef0: independent kernel parameter that only works with poly and sigmoid.
+        :return:probability, conf_matrix
+        """
+        model = SVC(C=C, kernel=kernel, degree=degree, gamma=gamma, coef0=coef0, shrinking=shrinking,
+                    probability=probability, max_iter=max_iter)
         model.fit(self.__x_train, self.__y_train)
         self.__model = model
         probability, conf_matrix = self.__generate_prediction()
         return probability, conf_matrix
 
-    def svm_support_vector_nu_classification(self):
-        model = NuSVC()
+    def svm_support_vector_nu_classification(self, nu=0.5, kernel='rbf', degree=3, gamma='auto', coef0=0,
+                                             shrinking=True,
+                                             probability=False, max_iter=1):
+        """
+        Nu-Support Vector Classification.
+        Similar to SVC but uses a parameter to control the number of support vectors.
+
+        :param nu: Fraction of training errors and a lower bound of the fraction of support vectors. Must be between (0,1]
+        :param kernel: Kernel type to use in the algorithm, inputs:
+                                linear, poly, rbf, sigmoid, precomputed
+        :param degree: Degree of the polynomial kernel function (only works if kernel = poly).
+        :param gamma: Kernel coefficient for rbf, poly and sigmoid.
+        :param max_iter: Max limit of iterations, -1 for no limit.
+        :param probability: Whether or not enable probabilities, it will slow down the computation.
+        :param shrinking: whether or not to use shrinking heuristic.
+        :param coef0: independent kernel parameter that only works with poly and sigmoid.
+        :return:probability, conf_matrix
+        """
+        model = NuSVC(nu=nu, kernel=kernel, degree=degree, gamma=gamma, coef0=coef0, shrinking=shrinking,
+                      probability=probability, max_iter=max_iter)
         model.fit(self.__x_train, self.__y_train)
         self.__model = model
         probability, conf_matrix = self.__generate_prediction()
         return probability, conf_matrix
 
-    def svm_support_vector_linear_classification(self):
-        model = LinearSVC()
+    def svm_support_vector_linear_classification(self, penalty='l2', loss='squared_hinge', dual=True, C=1.0,
+                                                 multi_class='ovr', fit_intercept=True, intercept_scaling=1,
+                                                 random_state=None):
+        """
+        Linear Support Vector Classification.
+        It has more flexibility in the choice of penalties and loss functions and should scale better to large numbers of samples.
+        :param penalty: Specifies the norm used in the penalization, inputs:
+                                    l2: standard penalty used in SVC.
+                                    l1: sparse vectors.
+        :param loss: Specifies the loss function, inputs:
+                                    hinge: standard SVC loss function.
+                                    squared_hinge: square of the hinge loss.
+        :param dual: Select the algorithm to either solve the dual or primal optimization problem.
+                                    tip: Use false when n_samples > n_features
+        :param C: Penalty parameter of the error
+        :param multi_class: Determines the multi-class strategy, inputs:
+                                    ovr,crammer_singer
+        :param fit_intercept: Whether to calculate the intercept of the model (False when the data is expected to be centered)
+        :param intercept_scaling: Regularization parameter.
+        :param random_state: Random seed, if none the default is np.Random.
+        :return:probability, conf_matrix
+        """
+        model = LinearSVC(penalty=penalty, loss=loss, dual=dual, C=C, multi_class=multi_class,
+                          fit_intercept=fit_intercept, intercept_scaling=intercept_scaling, random_state=random_state)
         model.fit(self.__x_train, self.__y_train)
         self.__model = model
         probability, conf_matrix = self.__generate_prediction()
         return probability, conf_matrix
 
     def gaussian_process_classifier(self):
+        """
+        Gaussian process classification (GPC) based on Laplace approximation.
+        :return:probability, conf_matrix
+        """
         model = GaussianProcessClassifier()
         model.fit(self.__x_train, self.__y_train)
         self.__model = model
         probability, conf_matrix = self.__generate_prediction()
         return probability, conf_matrix
 
-    def sklearn_neural_mlp(self):
-        model = MLPClassifier()
+    def neural_sklearn_mlp(self, hidden_layer_sizes=(100,), activation='relu', solver='adam', alpha=0.0001,
+                           batch_size='auto', learning_rate='constant', learning_rate_init=0.001, power_t=0.5,
+                           max_iter=200, shuffle=True, random_state=None, warm_start=False, momentum=0.9,
+                           nesterovs_momentum=True, early_stopping=False, validation_fraction=0.1, beta_1=0.9,
+                           beta_2=0.999, n_iter_no_change=10):
+        """
+        Multi-layer Perceptron classifier.
+        :param hidden_layer_sizes: The ith element represents the number of neurons in the ith hidden layer.
+        :param activation: Activation function for the hidden layer, inputs:
+                                    identity: No-op activation.
+                                    logistic: Logistic sigmoid function.
+                                    tanh: Hyperbolic tan function.
+                                    relu: Rectified linear unit function.
+        :param solver: Solver for weight optimization, inputs:
+                                    lbfgs: Optimizer in the family of quasi-Newton methods.
+                                    sgd: Stochastic gradient descent.
+                                    adam: Stochastic gradient-based optimizer.
+        :param alpha: Penalty parameter.
+        :param batch_size: Size of mini-batches for stochastic optimizers.
+                                    Tip: if solver is lbfgs, the classifier won't use mini-batches.
+        :param learning_rate: Learning rate schedule for weight updates, inputs:
+                                    constant: constasnt learing rate given by learning_rate_init.
+                                    invscaling: Decreases the learning rate at each time step t.
+                                    adaptative: Kpees the learning rate constant to learning_rate_init as long as training loss keeps decreasing.
+                                    Tip: Only used when solver = sgd.
+        :param learning_rate_init: Initial learning rate used, controls the step-size in updating the weights.
+        :param power_t: Exponent for inverse scaling learning rate.
+        :param max_iter: Maximum number of iterations.
+        :param shuffle:  Whether to shuffle samples in each iteration.
+        :param random_state: Random seed, if None, the default will be np.Random.
+        :param warm_start: If True, will use the solution of the previous fit as initialization, otherwise it erases previous solution
+        :param momentum: Gradient descend update, must be between 0 and 1.
+                                    Tip: Only works when solver = sgd.
+        :param nesterovs_momentum: Only used when solver = sgd and momentum > 0.
+        :param early_stopping: Whether to use early stopping to terminate training when validation score is not improving.
+        :param validation_fraction: The proportion of training data to set aside as validation set for early stopping.
+        :param beta_1: Exponential decay rate for estimates of first moment vector in adam.
+                                    Tip, values must be between [0,1] and when solver = adam.
+        :param beta_2: Exponential decay rate for estimates of second moment vector in adam.
+                                    Tip, values must be between [0,1] and when solver = adam.
+        :param n_iter_no_change:  Maximum number of epochs to not meet.
+                                    Tip, only works when solver = sgd or solver = adam.
+        :return:
+        """
+        model = MLPClassifier(hidden_layer_sizes=hidden_layer_sizes, activation=activation, solver=solver, alpha=alpha,
+                              batch_size=batch_size, learning_rate=learning_rate, learning_rate_init=learning_rate_init,
+                              power_t=power_t, max_iter=max_iter, shuffle=shuffle, random_state=random_state,
+                              warm_start=warm_start, momentum=momentum, nesterovs_momentum=nesterovs_momentum,
+                              early_stopping=early_stopping, validation_fraction=validation_fraction, beta_1=beta_1,
+                              beta_2=beta_2, n_iter_no_change=n_iter_no_change)
         model.fit(self.__x_train, self.__y_train)
         self.__model = model
         probability, conf_matrix = self.__generate_prediction()
@@ -137,6 +348,10 @@ class Models:
         return probability, conf_matrix
 
     def __generate_tree_graph(self):
+        """
+        For now this function is a TODO: make it work lol
+        :return:
+        """
         dot_data = tree.export_graphviz(self.__model, out_file=None, filled=True, rounded=True, special_characters=True)
         graph = graphviz.Source(dot_data)
         return graph

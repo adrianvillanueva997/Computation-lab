@@ -20,7 +20,7 @@ class Text_Processing:
     @staticmethod
     def __tokenizer(reviews):
         """
-        Tokenization process, recieves a list of reviews and returns a list with a list of tokens for each review
+        Tokenizing process, receives a list of reviews and returns a list with a list of tokens for each review
         :param reviews:
         :return : list
         """
