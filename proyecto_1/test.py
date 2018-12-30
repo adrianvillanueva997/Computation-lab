@@ -15,7 +15,7 @@ if __name__ == '__main__':
 
     vectorizer = Vectorizer.Vectorizer(good_reviews, bad_reviews, neutral_reviews)
     X_train, X_test, y_train, y_test = vectorizer.generate_train_test_data(vectorizer='count_vect', to_array=True,
-                                                                           test_size=1, random_state=None)
+                                                                           test_size=0.1, random_state=None)
 
     models = Models.Models(X_train, y_train, X_test, y_test)
     models.svm_support_vector_linear_classification()
