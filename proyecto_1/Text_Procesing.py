@@ -10,25 +10,24 @@ class Text_Processing:
     All NLP process is done here
     """
 
-    def __init__(self, reviews):
+    def __init__(self):
         """
         Class constructor
-        :param reviews:
         """
-        self.reviews = reviews
+        self.__reviews = []
 
     @staticmethod
-    def __tokenizer(reviews):
+    def tokenizer(reviews):
         """
         Tokenizing process, receives a list of reviews and returns a list with a list of tokens for each review
         :param reviews:
         :return : list
         """
-        tokens = []
-        for review in reviews:
-            token = word_tokenize(text=review, language='spanish')
-            tokens.append(token)
-        return tokens
+        stems = []
+        token = word_tokenize(text=reviews, language='spanish')
+        for item in token:
+            stems.append(SnowballStemmer(language='spanish').stem(item))
+        return stems
 
     @staticmethod
     def __filter_stop_words(tokens):
@@ -58,13 +57,14 @@ class Text_Processing:
             stemmed_reviews.append(stemmer.stem(word))
         return stemmed_reviews
 
-    def process_reviews(self):
+    def process_reviews(self, reviews):
         """
         Public function that does all the NLP process
         :return:list
         """
-        lower_reviews = [word.lower() for word in self.reviews]
-        tokens = self.__tokenizer(lower_reviews)
+        self.__reviews = reviews
+        lower_reviews = [word.lower() for word in self.__reviews]
+        tokens = self.tokenizer(lower_reviews)
         filtered_reviews = self.__filter_stop_words(tokens)
         stemmed_reviews = self.__stemmer(filtered_reviews)
 
