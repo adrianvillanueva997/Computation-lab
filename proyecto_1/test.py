@@ -18,11 +18,13 @@ if __name__ == '__main__':
                                                                            test_size=0.1, random_state=None)
 
     models = Models.Models(X_train, y_train, X_test, y_test)
-    models.svm_support_vector_linear_classification()
+    models.naive_bayes_multinomial()
     score, conf_matrix = models.generate_model_stadistics()
     print(score)
     print(conf_matrix)
-
     plot = models.plot_sklearn_learning_curve(title="Learning Curve", X=X_train, y=y_train)
+    plot.show()
+
+    plot = models.plot_confusion_matrix()
     plot.show()
 

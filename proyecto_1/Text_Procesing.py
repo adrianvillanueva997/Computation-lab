@@ -70,12 +70,12 @@ class Text_Processing:
 
         return stemmed_reviews
 
-    def graph_reviews(self):
+    def graph_reviews(self,reviews):
         """
         Dani didn't want this graph, but it may be useful (or not), returns a frequency word distribution graph
         :return: plot
         """
-        processed_reviews = self.process_reviews()
+        processed_reviews = self.process_reviews(reviews)
         fdist = FreqDist(processed_reviews)
         print(fdist)
         fdist.plot(30, cumulative=False)

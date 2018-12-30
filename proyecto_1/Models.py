@@ -1,9 +1,10 @@
+import itertools
 from keras import Sequential, layers
 from sklearn.ensemble import GradientBoostingClassifier
 from sklearn.gaussian_process import GaussianProcessClassifier
 from sklearn.linear_model import SGDClassifier
-from sklearn.metrics import confusion_matrix, average_precision_score
-from sklearn.model_selection import learning_curve
+from sklearn.metrics import confusion_matrix
+from sklearn.model_selection import learning_curve, cross_val_score
 from sklearn.naive_bayes import MultinomialNB, BernoulliNB, GaussianNB
 import matplotlib.pyplot as plt
 import numpy as np
@@ -13,6 +14,8 @@ from sklearn.svm import SVC, NuSVC, LinearSVC
 from sklearn.tree import DecisionTreeClassifier, DecisionTreeRegressor
 import graphviz
 import sklearn.tree as tree
+import pickle
+import os
 
 
 class Models:
@@ -29,6 +32,7 @@ class Models:
         self.__x_test = x_test
         self.__y_train = y_train
         self.__y_test = y_test
+        self.__confussion_matrix = None
 
     def naive_bayes_multinomial(self, alpha=1.0, fit_prior=True):
         """
@@ -37,7 +41,7 @@ class Models:
         :param fit_prior: Whether to learn class prior probabilities or not.
         :return: probability, conf_matrix
         """
-        model = MultinomialNB(alpha=alpha, fit_prior=True)
+        model = MultinomialNB(alpha=alpha, fit_prior=fit_prior)
         model.fit(self.__x_train, self.__y_train)
         self.__model = model
 
@@ -91,6 +95,7 @@ class Models:
     def tree_decission_regression(self):
         model = DecisionTreeRegressor()
         model.fit(self.__x_train, self.__y_train)
+        self.__model = model
 
     def gradient_booster(self, loss='deviance', learning_rate=0.1, n_estimators=100, subsample=0.1,
                          criterion='friedman_mse', min_samples_split=2, min_samples_leaf=1,
@@ -324,16 +329,39 @@ class Models:
         prediction = self.__model.predict(self.__x_test)
         score = self.__model.score(self.__x_test, self.__y_test)
         conf_matrix = confusion_matrix(self.__y_test, prediction)
+        cv_score = cross_val_score(self.__model, self.__x_train, self.__y_train, scoring='recall_macro',
+                                   cv=5)
+        print(cv_score)
+        self.__confussion_matrix = conf_matrix
         return score, conf_matrix
 
-    def __generate_tree_graph(self):
+    def plot_tree_graph(self):
         """
         For now this function is a TODO: make it work lol
         :return:
         """
-        dot_data = tree.export_graphviz(self.__model, out_file=None, filled=True, rounded=True, special_characters=True)
+        dot_data = tree.export_graphviz(self.__model, out_file=None,
+                                        feature_names=None,
+                                        class_names=['good', 'bad', 'neutral'],
+                                        filled=True, rounded=True,
+                                        special_characters=True)
         graph = graphviz.Source(dot_data)
         return graph
+
+    def export_model(self, path, model_name):
+        try:
+            extension = '.sav'
+            file_name = str(model_name) + str(extension)
+            full_path = os.path.join(path, file_name)
+            pickle.dump(self.__model, open(full_path, "wb"))
+        except Exception as e:
+            print(e)
+
+    def load_model(self, path):
+        try:
+            self.__model = pickle.load(open(path, 'rb'))
+        except Exception as e:
+            print(e)
 
     def plot_sklearn_learning_curve(self, title, X, y, ylim=None, cv=None, n_jobs=None,
                                     train_sizes=np.linspace(.1, 1.0, 5)):
@@ -417,7 +445,9 @@ class Models:
 
     def keras_sequential_model(self):
         model = Sequential()
+
         model.add(layers.Dense(10, input_dim=self.__x_train.shape[1], activation='relu'))
+        model.add(layers.GlobalMaxPool1D())
         model.add(layers.Dense(1, activation='sigmoid'))
         model.compile(loss='binary_crossentropy', optimizer='adam', metrics=['accuracy'])
         model.summary()
@@ -452,4 +482,38 @@ class Models:
         plt.plot(x, val_loss, 'r', label='Validation loss')
         plt.title('Training and validation loss')
         plt.legend()
+        return plt
+
+    def plot_confusion_matrix(self, classes=['good', 'bad', 'neutral'],
+                              normalize=False,
+                              title='Confusion matrix',
+                              cmap=plt.cm.Blues):
+        """
+        This function prints and plots the confusion matrix.
+        Normalization can be applied by setting `normalize=True`.
+        """
+        cm = self.__confussion_matrix
+        if normalize:
+            cm = self.__confussion_matrix.astype('float') / self.__confussion_matrix.sum(axis=1)[:, np.newaxis]
+            print("Normalized confusion matrix")
+        else:
+            print('Confusion matrix, without normalization')
+
+        plt.imshow(self.__confussion_matrix, interpolation='nearest', cmap=cmap)
+        plt.title(title)
+        plt.colorbar()
+        tick_marks = np.arange(len(classes))
+        plt.xticks(tick_marks, classes, rotation=45)
+        plt.yticks(tick_marks, classes)
+
+        fmt = '.2f' if normalize else 'd'
+        thresh = cm.max() / 2.
+        for i, j in itertools.product(range(cm.shape[0]), range(cm.shape[1])):
+            plt.text(j, i, format(cm[i, j], fmt),
+                     horizontalalignment="center",
+                     color="white" if cm[i, j] > thresh else "black")
+
+        plt.ylabel('True label')
+        plt.xlabel('Predicted label')
+        plt.tight_layout()
         return plt
