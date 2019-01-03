@@ -1,0 +1,41 @@
+<MainScreen>:
+    id: main_screen
+    BoxLayout:
+        orientation: "vertical"
+        padding: 10
+        StackLayout:
+            size_hint_y: 0.15
+            size_hint_x: 0.98
+            orientation: "rl-tb"
+            Button:
+                size_hint_x: 0.05
+                size_hint_y: 0.85
+                text: "Help"
+                pos_hint: {"right": 1, "center_y": 0.5}
+                on_release: main_screen.handle_event(self, "HELP")
+        BoxLayout:
+            Label:
+                size_hint_x: 1
+                size_hint_y: 0.8
+                pos_hint: {"center_x": 0.5, "center_y": 0.5}
+                text: "Cool Logo"
+                font_size: 64
+        FloatLayout:
+            size_hint_y: 0.8
+            size_hint_x: 0.95
+            pos_hint: {"center_x": 0.5, "center_y": 0.5}
+            Button:
+                pos_hint: {"center_x": 0.2, "center_y": 0.5}
+                size_hint_x: 0.40
+                size_hint_y: 0.85
+                font_size: 32
+                text: "Train"
+                on_release: main_screen.handle_event(self, "TRAIN")
+            Button:
+                pos_hint: {"center_x": 0.8, "center_y": 0.5}
+                size_hint_x: 0.40
+                size_hint_y: 0.85
+                font_size: 32
+                text: "Classify"
+                on_release: main_screen.handle_event(self, "CLASSIFY")
+
