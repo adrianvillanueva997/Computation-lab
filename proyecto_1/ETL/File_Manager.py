@@ -2,12 +2,12 @@ import os
 
 
 class File_Manager:
-    def __init__(self, path):
+    def __init__(self):
         """
         Class constructor
         :param path:
         """
-        self.path = path
+        self.path = None
 
     def __check_path(self):
         """
@@ -47,11 +47,12 @@ class File_Manager:
             file_content = file.read()
         return file_content
 
-    def extract_data_from_files(self):
+    def extract_data_from_files(self, path):
         """
         given an initial path in the constructor, returns a list with the files content
         :return: list
         """
+        self.path = path
         files = self.__get_files()
         file_data = []
         for file in files:

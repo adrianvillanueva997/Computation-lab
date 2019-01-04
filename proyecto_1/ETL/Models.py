@@ -1,16 +1,17 @@
 import itertools
 from keras import Sequential, layers
-from sklearn.ensemble import GradientBoostingClassifier
+from sklearn.ensemble import GradientBoostingClassifier, RandomForestClassifier, ExtraTreesClassifier, \
+    AdaBoostClassifier, AdaBoostRegressor, VotingClassifier
 from sklearn.gaussian_process import GaussianProcessClassifier
 from sklearn.linear_model import SGDClassifier
-from sklearn.metrics import confusion_matrix
-from sklearn.model_selection import learning_curve, cross_val_score
+from sklearn.metrics import confusion_matrix, classification_report
+from sklearn.model_selection import learning_curve, cross_val_score, KFold
 from sklearn.naive_bayes import MultinomialNB, BernoulliNB, GaussianNB
 import matplotlib.pyplot as plt
 import numpy as np
 from sklearn.neighbors import KNeighborsClassifier, RadiusNeighborsClassifier
 from sklearn.neural_network import MLPClassifier
-from sklearn.svm import SVC, NuSVC, LinearSVC
+from sklearn.svm import SVC, NuSVC, LinearSVC, SVR, NuSVR
 from sklearn.tree import DecisionTreeClassifier, DecisionTreeRegressor
 import graphviz
 import sklearn.tree as tree
@@ -66,6 +67,16 @@ class Models:
         model.fit(self.__x_train, self.__y_train)
         self.__model = model
 
+    def ada_classifier(self):
+        model = AdaBoostClassifier()
+        model.fit(self.__x_train, self.__y_train)
+        self.__model = model
+
+    def ada_regressor(self):
+        model = AdaBoostRegressor()
+        model.fit(self.__x_train, self.__y_train)
+        self.__model = model
+
     def tree_decision_classifier(self, criterion='gini', splitter='best', max_depth=None, min_samples_split=2,
                                  min_samples_leaf=1, min_weight_fraction_leaf=0., max_features=None, random_state=None):
         """
@@ -92,8 +103,18 @@ class Models:
         model.fit(self.__x_train, self.__y_train)
         self.__model = model
 
-    def tree_decission_regression(self):
+    def tree_decision_regression(self):
         model = DecisionTreeRegressor()
+        model.fit(self.__x_train, self.__y_train)
+        self.__model = model
+
+    def tree_random_forest(self):
+        model = RandomForestClassifier()
+        model.fit(self.__x_train, self.__y_train)
+        self.__model = model
+
+    def tree_extra_tree_classifier(self):
+        model = ExtraTreesClassifier()
         model.fit(self.__x_train, self.__y_train)
         self.__model = model
 
@@ -259,6 +280,16 @@ class Models:
         model.fit(self.__x_train, self.__y_train)
         self.__model = model
 
+    def svm_support_vector_regression(self):
+        model = SVR()
+        model.fit(self.__x_train, self.__y_train)
+        self.__model = model
+
+    def svm_support_vector_nu_regression(self):
+        model = NuSVR()
+        model.fit(self.__x_train, self.__y_train)
+        self.__model = model
+
     def gaussian_process_classifier(self):
         """
         Gaussian process classification (GPC) based on Laplace approximation.
@@ -321,23 +352,61 @@ class Models:
         model.fit(self.__x_train, self.__y_train)
         self.__model = model
 
-    def generate_model_stadistics(self):
+    def keras_sequential_model(self, vocabulary_size, maxlen, embedding_dim=50):
+        model = Sequential()
+
+        model.add(layers.Dense(10, input_dim=self.__x_train.shape[1], activation='relu'))
+        model.add(layers.GlobalMaxPool1D())
+        model.add(layers.Dense(1, activation='sigmoid'))
+        model.compile(loss='binary_crossentropy', optimizer='adam', metrics=['accuracy'])
+        model.summary()
+        loss, accuracy = model.evaluate(self.__x_train, self.__y_train, verbose=False)
+        print("Training Accuracy: {:.4f}".format(accuracy))
+        print("Training Loss: {:.4f}".format(loss))
+        loss, accuracy = model.evaluate(self.__x_train, self.__y_train, verbose=False)
+        print("Testing Accuracy:  {:.4f}".format(accuracy))
+        print("Testing Loss: {:.4f}".format(loss))
+        self.__model = model
+
+    def get_model(self):
+        return self.__model
+
+    def generate_regression_model_statistics(self):
+        prediction = self.__model.predict(self.__x_test)
+        kfold = KFold(n_splits=10, random_state=None)
+        results = cross_val_score(self.__model, self.__x_train, self.__y_train, cv=kfold,
+                                  scoring='neg_mean_absolute_error')
+
+        # how wrong the predictions are, if MAE = 0, perfect predictions
+        nmae_results_mean = results.mean()
+        nmae_results_std = results.std()
+
+        # indicates magnitude error, mean absolute error
+        results2 = cross_val_score(self.__model, self.__x_train, self.__y_train, cv=kfold,
+                                   scoring='neg_mean_squared_error')
+
+        nmse_results_mean = results2.mean()
+        nmse_results_std = results2.std()
+
+        return nmae_results_mean, nmae_results_std,
+
+    def generate_classification_model_statistics(self):
         """
         Method that generates the prediction value and confussion matrix
         :return:
         """
         prediction = self.__model.predict(self.__x_test)
-        score = self.__model.score(self.__x_test, self.__y_test)
         conf_matrix = confusion_matrix(self.__y_test, prediction)
-        cv_score = cross_val_score(self.__model, self.__x_train, self.__y_train, scoring='recall_macro',
-                                   cv=5)
-        print(cv_score)
+        cv_score = cross_val_score(self.__model, self.__x_train, self.__y_train, cv=5)
+        cross_validation_score = cv_score.mean()
+        cross_validation_variance = cv_score.std()
+        classification_score = classification_report(self.__y_test, prediction)
         self.__confussion_matrix = conf_matrix
-        return score, conf_matrix
+        return cross_validation_score, conf_matrix, cross_validation_variance, classification_score
 
     def plot_tree_graph(self):
         """
-        For now this function is a TODO: make it work lol
+
         :return:
         """
         dot_data = tree.export_graphviz(self.__model, out_file=None,
@@ -442,26 +511,6 @@ class Models:
 
         plt.legend(loc="best")
         return plt
-
-    def keras_sequential_model(self):
-        model = Sequential()
-
-        model.add(layers.Dense(10, input_dim=self.__x_train.shape[1], activation='relu'))
-        model.add(layers.GlobalMaxPool1D())
-        model.add(layers.Dense(1, activation='sigmoid'))
-        model.compile(loss='binary_crossentropy', optimizer='adam', metrics=['accuracy'])
-        model.summary()
-
-        model_history = model.fit(self.__x_train, self.__y_train, epochs=50,
-                                  validation_data=(self.__x_test, self.__y_test), batch_size=10)
-
-        self.__model = model_history
-        loss, accuracy = model.evaluate(self.__x_train, self.__y_train, verbose=False)
-        print("Training Accuracy: {:.4f}".format(accuracy))
-        print("Training Loss: {:.4f}".format(loss))
-        loss, accuracy = model.evaluate(self.__x_train, self.__y_train, verbose=False)
-        print("Testing Accuracy:  {:.4f}".format(accuracy))
-        print("Testing Loss: {:.4f}".format(loss))
 
     def plot_keras_model(self):
         plt.style.use('ggplot')
