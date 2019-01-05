@@ -1,5 +1,7 @@
+import os
+import matplotlib.pyplot as plt
 import pandas as pd
-from keras_preprocessing.sequence import pad_sequences
+import pickle
 from nltk.corpus import stopwords
 from sklearn.feature_extraction.text import CountVectorizer, TfidfVectorizer
 from sklearn.model_selection import train_test_split
@@ -20,6 +22,7 @@ class Vectorizer:
         self.__b_reviews = b_reviews
         self.__n_reviews = n_reviews
         self.__u_reviews = u_reviews
+        self.__vectorizer = None
 
     def __generate_training_dataframe(self):
         """
@@ -35,20 +38,31 @@ class Vectorizer:
 
         for review in self.__g_reviews:
             data['reviews'].append(review)
-            data['labels'].append(1)
+            data['labels'].append('G')
 
         for review in self.__b_reviews:
             data['reviews'].append(review)
-            data['labels'].append(2)
+            data['labels'].append('B')
 
         for review in self.__n_reviews:
             data['reviews'].append(review)
-            data['labels'].append(3)
+            data['labels'].append('N')
 
         self.__data_frame = pd.DataFrame(data)
 
-    @staticmethod
-    def __count_vectorizer(x_train, x_test, to_array):
+    def __generate_unlabeled_dataframe(self, file_names):
+        data = {
+            'file_names': file_names,
+            'reviews': [],
+            'labels': [],
+        }
+        for review in self.__u_reviews:
+            data['reviews'].append(review)
+            data['labels'].append('U')
+
+        self.__data_frame = pd.DataFrame(data)
+
+    def __count_vectorizer_train(self, x_train, x_test):
         """
         Convert a collection of text documents to a matrix of token counts
         :param to_array:
@@ -57,35 +71,27 @@ class Vectorizer:
         stop_words = set(stopwords.words('spanish'))
         cv = CountVectorizer(tokenizer=tp.tokenizer, stop_words=stop_words)
         cv.fit(x_train)
-        if to_array:
-            x_train = cv.transform(x_train).toarray()
-            x_test = cv.transform(x_test).toarray()
-            return x_train, x_test
-        else:
-            x_train = cv.transform(x_train)
-            x_test = cv.transform(x_test)
-            return x_train, x_test
+        x_train = cv.transform(x_train).toarray()
+        x_test = cv.transform(x_test).toarray()
+        self.__vectorizer = cv
+        return x_train, x_test
 
-    @staticmethod
-    def __term_frequency_vectorizer(x_train, x_test, to_array):
-        """
-        Convert a collection of text documents to a matrix of token occurrences
-        :param to_array:
-        """
-        tp = Text_Procesing.Text_Processing()
-        stop_words = set(stopwords.words('spanish'))
-        tf = TfidfVectorizer(tokenizer=tp.tokenizer, stop_words=stop_words)
-        tf.fit(x_train)
-        if to_array:
-            x_train = tf.transform(x_train).toarray()
-            x_test = tf.transform(x_test).toarray()
-            return x_train, x_test
-        else:
-            x_train = tf.transform(x_train)
-            x_test = tf.transform(x_test)
-            return x_train, x_test
+    def export_vectorizer(self, path, model_name):
+        try:
+            extension = '.vocab'
+            file_name = str(model_name) + str(extension)
+            full_path = os.path.join(path, file_name)
+            pickle.dump(self.__vectorizer, open(full_path, "wb"))
+        except Exception as e:
+            print(e)
 
-    def generate_train_test_data(self, vectorizer, to_array=True, test_size=0.1, random_state=None,
+    def load_vectorizer(self, path):
+        try:
+            self.__vectorizer = pickle.load(open(path, 'rb'))
+        except Exception as e:
+            print(e)
+
+    def generate_train_test_data(self, vectorizer, test_size=0.1, random_state=None,
                                  train_size=None):
         """
         Generate train/test data given some vectorized reviews
@@ -101,11 +107,31 @@ class Vectorizer:
                                                             random_state=random_state,
                                                             train_size=train_size)
         if vectorizer == "count_vect":
-            x_train, x_test = self.__count_vectorizer(x_train=x_train, x_test=x_test, to_array=to_array)
+            x_train, x_test = self.__count_vectorizer_train(x_train=x_train, x_test=x_test)
         elif vectorizer == "tfid":
-            x_train, x_test = self.__term_frequency_vectorizer(x_train=x_train, x_test=x_test, to_array=to_array)
+            x_train, x_test = self.__term_frequency_vectorizer_train(x_train=x_train, x_test=x_test)
 
         else:
             return None
 
         return x_train, x_test, y_train, y_test
+
+    def generate_unlabeled_data(self, file_names):
+        self.__generate_unlabeled_dataframe(file_names)
+        unlabeled_data = self.__vectorizer.transform(self.__data_frame['reviews']).toarray()
+        return unlabeled_data
+
+    def update_unlabeled_dataframe(self, predicted_data):
+        self.__data_frame['labels'] = predicted_data
+        print(self.__data_frame)
+        self.__data_frame['labels'].value_counts().plot('bar')
+        plt.show()
+        self.__data_frame.to_csv('export.csv', index=False)
+
+    def plot_dataframe(self):
+        plot = self.__data_frame['labels'].value_counts().plot('bar')
+        plt.show()
+        return plot
+
+    def export_dataframe_csv(self):
+        self.__data_frame.to_csv('export.csv')

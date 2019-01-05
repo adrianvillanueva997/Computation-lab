@@ -26,12 +26,14 @@ class File_Manager:
         """
         if self.__check_path():
             files = []
+            file_names = []
             for r, d, f in os.walk(self.path):
                 for file in f:
                     if file.__contains__('.txt'):
                         file_path = os.path.join(r, file)
+                        file_names.append(file)
                         files.append(file_path)
-            return files
+            return files, file_names
         else:
             print('[INFO] Path is not correct')
             return None
@@ -53,12 +55,12 @@ class File_Manager:
         :return: list
         """
         self.path = path
-        files = self.__get_files()
+        files, file_names = self.__get_files()
         file_data = []
         for file in files:
             content = self.__read_file(file)
             file_data.append(content)
-        return file_data
+        return file_data, file_names
 
     def get_file_count(self):
         """

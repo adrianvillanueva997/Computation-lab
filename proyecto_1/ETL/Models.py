@@ -1,7 +1,7 @@
 import itertools
 from keras import Sequential, layers
 from sklearn.ensemble import GradientBoostingClassifier, RandomForestClassifier, ExtraTreesClassifier, \
-    AdaBoostClassifier, AdaBoostRegressor, VotingClassifier
+    AdaBoostClassifier
 from sklearn.gaussian_process import GaussianProcessClassifier
 from sklearn.linear_model import SGDClassifier
 from sklearn.metrics import confusion_matrix, classification_report
@@ -11,8 +11,8 @@ import matplotlib.pyplot as plt
 import numpy as np
 from sklearn.neighbors import KNeighborsClassifier, RadiusNeighborsClassifier
 from sklearn.neural_network import MLPClassifier
-from sklearn.svm import SVC, NuSVC, LinearSVC, SVR, NuSVR
-from sklearn.tree import DecisionTreeClassifier, DecisionTreeRegressor
+from sklearn.svm import SVC, NuSVC, LinearSVC
+from sklearn.tree import DecisionTreeClassifier
 import graphviz
 import sklearn.tree as tree
 import pickle
@@ -72,11 +72,6 @@ class Models:
         model.fit(self.__x_train, self.__y_train)
         self.__model = model
 
-    def ada_regressor(self):
-        model = AdaBoostRegressor()
-        model.fit(self.__x_train, self.__y_train)
-        self.__model = model
-
     def tree_decision_classifier(self, criterion='gini', splitter='best', max_depth=None, min_samples_split=2,
                                  min_samples_leaf=1, min_weight_fraction_leaf=0., max_features=None, random_state=None):
         """
@@ -100,11 +95,6 @@ class Models:
                                        min_samples_split=min_samples_split,
                                        min_weight_fraction_leaf=min_weight_fraction_leaf, max_features=max_features,
                                        max_depth=max_depth, random_state=random_state)
-        model.fit(self.__x_train, self.__y_train)
-        self.__model = model
-
-    def tree_decision_regression(self):
-        model = DecisionTreeRegressor()
         model.fit(self.__x_train, self.__y_train)
         self.__model = model
 
@@ -280,16 +270,6 @@ class Models:
         model.fit(self.__x_train, self.__y_train)
         self.__model = model
 
-    def svm_support_vector_regression(self):
-        model = SVR()
-        model.fit(self.__x_train, self.__y_train)
-        self.__model = model
-
-    def svm_support_vector_nu_regression(self):
-        model = NuSVR()
-        model.fit(self.__x_train, self.__y_train)
-        self.__model = model
-
     def gaussian_process_classifier(self):
         """
         Gaussian process classification (GPC) based on Laplace approximation.
@@ -368,27 +348,9 @@ class Models:
         print("Testing Loss: {:.4f}".format(loss))
         self.__model = model
 
-    def get_model(self):
-        return self.__model
-
-    def generate_regression_model_statistics(self):
-        prediction = self.__model.predict(self.__x_test)
-        kfold = KFold(n_splits=10, random_state=None)
-        results = cross_val_score(self.__model, self.__x_train, self.__y_train, cv=kfold,
-                                  scoring='neg_mean_absolute_error')
-
-        # how wrong the predictions are, if MAE = 0, perfect predictions
-        nmae_results_mean = results.mean()
-        nmae_results_std = results.std()
-
-        # indicates magnitude error, mean absolute error
-        results2 = cross_val_score(self.__model, self.__x_train, self.__y_train, cv=kfold,
-                                   scoring='neg_mean_squared_error')
-
-        nmse_results_mean = results2.mean()
-        nmse_results_std = results2.std()
-
-        return nmae_results_mean, nmae_results_std,
+    def predict(self, unlabeled_data):
+        unlabeled_prediction = self.__model.predict(unlabeled_data)
+        return unlabeled_prediction
 
     def generate_classification_model_statistics(self):
         """
@@ -419,7 +381,7 @@ class Models:
 
     def export_model(self, path, model_name):
         try:
-            extension = '.sav'
+            extension = '.model'
             file_name = str(model_name) + str(extension)
             full_path = os.path.join(path, file_name)
             pickle.dump(self.__model, open(full_path, "wb"))
@@ -533,7 +495,7 @@ class Models:
         plt.legend()
         return plt
 
-    def plot_confusion_matrix(self, classes=['good', 'bad', 'neutral'],
+    def plot_confusion_matrix(self, classes=['Good', 'Bad', 'Neutral'],
                               normalize=False,
                               title='Confusion matrix',
                               cmap=plt.cm.Blues):
