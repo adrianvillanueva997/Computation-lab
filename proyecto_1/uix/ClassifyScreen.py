@@ -1,5 +1,7 @@
 from tkinter import *
-from uix import MainScreen as MS
+
+from proyecto_1.uix import MainScreen as MS
+
 
 class ClassifyScreenController():
 
@@ -19,10 +21,10 @@ class ClassifyScreenController():
         else:
             print("Unrecognized command %s" % command)
 
-    def exit(self,window):
+    def exit(self, window):
         print("TODO implement exit")
 
-    def goto_previous(self,window):
+    def goto_previous(self, window):
         window.root.remove_frame()
         MS.MainScreen(window.root)
 
@@ -38,8 +40,9 @@ class ClassifyScreenController():
     def classify(self):
         print("TODO implement classify")
 
+
 class ClassifyScreen(Frame):
-    def __init__(self,master):
+    def __init__(self, master):
         Frame.__init__(self, master)
         self.root = master
 
@@ -63,7 +66,7 @@ class ClassifyScreen(Frame):
         self.someTitle_lbl.pack()
 
         # center table Frame ------------------------------------------------------------------->
-        self.center_Frame = Frame(self.root,pady=130, bg='#cbccd1')
+        self.center_Frame = Frame(self.root, pady=130, bg='#cbccd1')
         self.center_Canvas = Canvas(self.center_Frame, bg='#b8b8b8')
         self.myImgReviews = PhotoImage(file='resources/reviews1.png')
         self.imgReviews_lbl = Label(self.center_Canvas, image=self.myImgReviews)
@@ -96,10 +99,9 @@ class ClassifyScreen(Frame):
                                         command=lambda: send_event("CLASSIFY"))
         self.startTraining_btn.pack()
 
-
         self.exit_Frame.grid(row=0, column=0, columnspan=3, sticky=E)
-        self.title_Frame.grid(row=1, column=0, columnspan=3, pady=45, sticky=N+S)
-        self.center_Frame.grid(row=2, column=0, columnspan=3, padx=65, sticky=N+S)
+        self.title_Frame.grid(row=1, column=0, columnspan=3, pady=45, sticky=N + S)
+        self.center_Frame.grid(row=2, column=0, columnspan=3, padx=65, sticky=N + S)
         self.selectModel_Frame.grid(row=3, column=0, padx=65, sticky=W)
         self.buttonLeft_Frame.grid(row=3, column=1, padx=65, sticky=E)
         self.buttonRight_Frame.grid(row=3, column=2, padx=65, sticky=E)

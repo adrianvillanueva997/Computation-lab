@@ -1,6 +1,8 @@
 from tkinter import *
-from uix import MainScreen as MS
-from uix import TrainingResultScreen as TRS
+
+from proyecto_1.uix import MainScreen as MS
+from proyecto_1.uix import TrainingResultScreen as TRS
+
 
 class TrainScreenController():
 
@@ -21,27 +23,25 @@ class TrainScreenController():
         else:
             print("Unrecognized command %s" % command)
 
-    def exit(self,window):
+    def exit(self, window):
         print("TODO implement exit")
 
-    def goto_previous(self,window):
+    def goto_previous(self, window):
         window.root.remove_frame()
         MS.MainScreen(window.root)
 
-    def select_path(self,label):
+    def select_path(self, label):
         print("TODO implement select_path")
 
     def select_model(self):
         print("TODO implement select_model")
 
-    def start_training(self,window):
+    def start_training(self, window):
 
         # Code for training goes here
-        #Change window when it's over
+        # Change window when it's over
         window.root.remove_frame()
         TRS.TrainingResultScreen(window.root)
-
-
 
 
 class TrainScreen(Frame):
@@ -92,7 +92,7 @@ class TrainScreen(Frame):
         # Path Entry + button
         self.selectGood_entry = Entry(self.selectPathTable_Frame, justify='right')
         self.selectButton_btn = Button(self.selectPathTable_Frame, text='Select Path',
-                                       command=lambda: send_event("SELECT_PATH", label = "Good"))
+                                       command=lambda: send_event("SELECT_PATH", label="Good"))
 
         self.selectNeutral_entry = Entry(self.selectPathTable_Frame, justify='right')
         self.selectButton1_btn = Button(self.selectPathTable_Frame, text='Select Path',
@@ -102,16 +102,15 @@ class TrainScreen(Frame):
         self.selectButton2_btn = Button(self.selectPathTable_Frame, text='Select Path',
                                         command=lambda: send_event("SELECT_PATH", label="Bad"))
         # Grid Location
-        self.imgModelHappy_lbl.grid(row=0, column=0, rowspan=2, pady=5, sticky=N+S+W+E)
-        self.imgModelNeutral_lbl.grid(row=2, column=0,rowspan=2, pady=5, sticky=N+S+W+E)
-        self.imgModelSad_lbl.grid(row=4, column=0,rowspan=2, pady=5, sticky=N+S+W+E)
-        self.selectGood_entry.grid(row=0, column=1,padx=35, ipadx=200, sticky=N)
-        self.selectNeutral_entry.grid(row=2, column=1,padx=35, ipadx=200, sticky=N)
-        self.selectBad_entry.grid(row=4, column=1,padx=35, ipadx=200, sticky=N)
+        self.imgModelHappy_lbl.grid(row=0, column=0, rowspan=2, pady=5, sticky=N + S + W + E)
+        self.imgModelNeutral_lbl.grid(row=2, column=0, rowspan=2, pady=5, sticky=N + S + W + E)
+        self.imgModelSad_lbl.grid(row=4, column=0, rowspan=2, pady=5, sticky=N + S + W + E)
+        self.selectGood_entry.grid(row=0, column=1, padx=35, ipadx=200, sticky=N)
+        self.selectNeutral_entry.grid(row=2, column=1, padx=35, ipadx=200, sticky=N)
+        self.selectBad_entry.grid(row=4, column=1, padx=35, ipadx=200, sticky=N)
         self.selectButton_btn.grid(row=1, column=1, padx=35, sticky=W)
         self.selectButton1_btn.grid(row=3, column=1, padx=35, sticky=W)
         self.selectButton2_btn.grid(row=5, column=1, padx=35, sticky=W)
-
 
         # Select Model Frame ---------------------------------------------------------------------->
         self.selectModel_Frame = Frame(self.root)
@@ -121,7 +120,7 @@ class TrainScreen(Frame):
         # img left Frame
         self.myImgModel = PhotoImage(file='resources/selectModel.png')
         self.imgModel_lbl = Label(self.selectModelGrid_Frame, image=self.myImgModel)
-        #self.imgModel_lbl.pack(fill="both", expand=True)
+        # self.imgModel_lbl.pack(fill="both", expand=True)
         self.imgModel_lbl.config(bg='#eaeaea')
         # entry + select btn right Frame
         self.selectModel_entry = Entry(self.selectModelGrid_Frame, justify='right')
@@ -142,7 +141,7 @@ class TrainScreen(Frame):
         # position of the mainData frames into the grid ---------------------------------------------------------------------->
         self.exit_Frame.grid(row=0, column=0, columnspan=2, padx=10, pady=10, sticky=E)
         self.title_Frame.grid(row=1, column=0, columnspan=2, sticky="ew")
-        self.selectPath_Frame.grid(row=2, column=0, columnspan=2, padx=75, sticky=N+S)
+        self.selectPath_Frame.grid(row=2, column=0, columnspan=2, padx=75, sticky=N + S)
         self.selectModel_Frame.grid(row=3, column=0, padx=85, pady=65, sticky=W)
         self.startTraining_Frame.grid(row=3, column=1, padx=85, pady=65, sticky=E)
 

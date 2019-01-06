@@ -1,5 +1,6 @@
 from tkinter import *
-from uix import MainScreen as MS
+
+from proyecto_1.uix import MainScreen as MS
 
 
 class MainApp(Tk):
@@ -11,8 +12,7 @@ class MainApp(Tk):
         self.minsize(800, 600)
         self.config(bd='10')
         self.config(relief='groove')
-        #self.config(bg='#cbccd1')
-
+        # self.config(bg='#cbccd1')
 
         # the container is where we'll stack a bunch of frames
         self.container = Container(self)
@@ -34,10 +34,10 @@ class Container(Frame):
             widget.destroy()
 
     def previous_frame(self):
-        #NO idea how to do this on tkinter so far
+        # NO idea how to do this on tkinter so far
         pass
+
 
 if __name__ == "__main__":
     # execute only if run as a script
     MainApp()
-

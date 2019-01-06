@@ -1,6 +1,8 @@
 from tkinter import *
-from uix import ClassifyScreen as CS
-from uix import TrainScreen as TS
+
+from proyecto_1.uix import ClassifyScreen as CS
+from proyecto_1.uix import TrainScreen as TS
+
 
 class MainScreenController():
 
@@ -16,20 +18,19 @@ class MainScreenController():
         else:
             print("Unrecognized command %s" % command)
 
-    def exit(self,window):
+    def exit(self, window):
         print("TODO implement exit")
 
     def goto_help(self):
         print("TODO: Implement goto_help")
 
-    def goto_training(self,window):
+    def goto_training(self, window):
         window.root.remove_frame()
         TS.TrainScreen(window.root)
 
-    def goto_classify(self,window):
+    def goto_classify(self, window):
         window.root.remove_frame()
         CS.ClassifyScreen(window.root)
-
 
 
 class MainScreen(Frame):
@@ -40,6 +41,7 @@ class MainScreen(Frame):
         self.exit_Frame = Frame(self.root, padx=10, pady=10, bg='#cbccd1')
 
         self.controller = MainScreenController()
+
         def send_event(command):
             self.controller.handle_event(self, command)
 
@@ -48,12 +50,12 @@ class MainScreen(Frame):
 
         self.exit_btn = Button(self.exit_Frame, text='Exit', padx=5, pady=5, command=lambda: send_event("EXIT"))
         self.help_btn = Button(self.exit_Frame, text='Help', padx=5, pady=5, command=lambda: send_event("HELP"))
-        #self.exit_btn.config(relief='groove')
+        # self.exit_btn.config(relief='groove')
         self.exit_btn.pack(side='right', fill="both", expand=True)
         self.help_btn.pack(side='right', fill="both", expand=True)
 
         # img logo Frame
-        self.logo_Frame = Frame(self.root,width=1000, height=800)
+        self.logo_Frame = Frame(self.root, width=1000, height=800)
 
         self.myImg = PhotoImage(file='resources/py.png')
         self.img_lbl = Label(self.logo_Frame, image=self.myImg)
@@ -81,15 +83,15 @@ class MainScreen(Frame):
         self.myImg2 = PhotoImage(file='resources/class.png')
         self.clasificador_btn = Button(self.btn_right_Frame, image=self.myImg2, padx='5', pady='5',
                                        command=lambda: send_event("CLASSIFY"))
-        #self.entrenamiento_btn = Button(self.btn_left_Frame, text='Entrenamiento',padx='10',pady='10')
-        #self.clasificador_btn = Button(self.btn_right_Frame, text='Clasificador', padx='10', pady='10')
+        # self.entrenamiento_btn = Button(self.btn_left_Frame, text='Entrenamiento',padx='10',pady='10')
+        # self.clasificador_btn = Button(self.btn_right_Frame, text='Clasificador', padx='10', pady='10')
         self.entrenamiento_btn.pack()
         self.clasificador_btn.pack()
 
         # posicion de los mainFrame en el grid
-        self.exit_Frame.grid(row=0, column=0,columnspan=2, sticky=E, padx= 5, pady=5)
-        self.logo_Frame.grid(row=1, column=0,columnspan=2, sticky=N+S+E+W)
-        self.tdiName_Frame.grid(row=2, column=0, columnspan=2, sticky=N+S)
+        self.exit_Frame.grid(row=0, column=0, columnspan=2, sticky=E, padx=5, pady=5)
+        self.logo_Frame.grid(row=1, column=0, columnspan=2, sticky=N + S + E + W)
+        self.tdiName_Frame.grid(row=2, column=0, columnspan=2, sticky=N + S)
         self.btn_left_Frame.grid(row=3, column=0, sticky=W, padx=85, pady=65)
         self.btn_right_Frame.grid(row=3, column=1, sticky=E, padx=85, pady=65)
 

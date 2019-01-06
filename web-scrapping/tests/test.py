@@ -1,5 +1,4 @@
 import requests
-import re
 from bs4 import BeautifulSoup
 
 request = requests.get(r'http://www.zoover.es/espana/tenerife/playa-de-las-americas/h10-conquistador/hotel')

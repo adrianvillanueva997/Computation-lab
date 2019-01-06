@@ -1,6 +1,8 @@
 from tkinter import *
-from uix import MainScreen as MS
-from uix import TrainScreen as TS
+
+from proyecto_1.uix import MainScreen as MS
+from proyecto_1.uix import TrainScreen as TS
+
 
 class TrainingResultScreenController():
 
@@ -16,20 +18,19 @@ class TrainingResultScreenController():
         else:
             print("Unrecognized command %s" % command)
 
-    def exit(self,window):
+    def exit(self, window):
         print("TODO implement exit")
 
-    def goto_previous(self,window):
+    def goto_previous(self, window):
         window.root.remove_frame()
         TS.TrainScreen(window.root)
 
-    def goto_main_menu(self,window):
+    def goto_main_menu(self, window):
         window.root.remove_frame()
         MS.MainScreen(window.root)
 
     def save_model(self):
         print("TODO implement save_model")
-
 
 
 class TrainingResultScreen(Frame):
@@ -73,13 +74,12 @@ class TrainingResultScreen(Frame):
         # Bottom right menu
         self.saveModel_Frame = Frame(self.root, pady=15, bg='#cbccd1')
         self.saveModel_btn = Button(self.saveModel_Frame, text='Return to Menu', padx=10,
-                                     command=lambda: send_event("SAVE_MODEL"))
+                                    command=lambda: send_event("SAVE_MODEL"))
         self.saveModel_btn.pack(side=RIGHT, padx=10)
 
-
         self.exit_Frame.grid(row=0, column=0, columnspan=2, sticky=E)
-        self.title_Frame.grid(row=1, column=0, columnspan=2, pady=45, sticky=N+S)
-        self.center_Frame.grid(row=2, column=0, columnspan=2, padx=65, sticky=N+S)
+        self.title_Frame.grid(row=1, column=0, columnspan=2, pady=45, sticky=N + S)
+        self.center_Frame.grid(row=2, column=0, columnspan=2, padx=65, sticky=N + S)
         self.returnMenu_Frame.grid(row=3, column=0, padx=65, sticky=W)
         self.saveModel_Frame.grid(row=3, column=1, padx=65, sticky=E)
 
