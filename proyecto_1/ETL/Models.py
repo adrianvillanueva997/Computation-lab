@@ -1,22 +1,23 @@
 import itertools
+import os
+import pickle
+
+import graphviz
+import matplotlib.pyplot as plt
+import numpy as np
+import sklearn.tree as tree
 from keras import Sequential, layers
 from sklearn.ensemble import GradientBoostingClassifier, RandomForestClassifier, ExtraTreesClassifier, \
     AdaBoostClassifier
 from sklearn.gaussian_process import GaussianProcessClassifier
 from sklearn.linear_model import SGDClassifier
 from sklearn.metrics import confusion_matrix, classification_report
-from sklearn.model_selection import learning_curve, cross_val_score, KFold
+from sklearn.model_selection import learning_curve, cross_val_score
 from sklearn.naive_bayes import MultinomialNB, BernoulliNB, GaussianNB
-import matplotlib.pyplot as plt
-import numpy as np
 from sklearn.neighbors import KNeighborsClassifier, RadiusNeighborsClassifier
 from sklearn.neural_network import MLPClassifier
 from sklearn.svm import SVC, NuSVC, LinearSVC
 from sklearn.tree import DecisionTreeClassifier
-import graphviz
-import sklearn.tree as tree
-import pickle
-import os
 
 
 class Models:

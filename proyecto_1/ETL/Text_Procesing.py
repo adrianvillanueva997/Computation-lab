@@ -1,8 +1,9 @@
+import string
+
 from nltk.corpus import stopwords
-from nltk.tokenize import word_tokenize
 from nltk.probability import FreqDist
 from nltk.stem import SnowballStemmer
-import string
+from nltk.tokenize import word_tokenize
 
 
 class Text_Processing:
