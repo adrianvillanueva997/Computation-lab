@@ -1,9 +1,8 @@
 from tkinter import *
+from tkinter.filedialog import askdirectory
 
 from proyecto_1.uix import MainScreen as MS
 from proyecto_1.uix import TrainingResultScreen as TRS
-from tkinter.filedialog import askdirectory
-
 
 
 class TrainScreenController():
@@ -19,7 +18,7 @@ class TrainScreenController():
             else:
                 print("ERROR: Needs a parameter \"label\"")
         elif command == "SELECT_MODEL":
-                self.select_model(window)
+            self.select_model(window)
         elif command == "START_TRAINING":
             self.start_training(window)
         else:
@@ -49,20 +48,12 @@ class TrainScreenController():
         print("TODO implement select_path")
 
     def select_model(self, window):
-
         chosen_model = window.modelVar.get()
         algorithm_list = window.choices_dict[chosen_model]
-        algorithm_list = tuple(algorithm_list)
-        for algorithm in algorithm_list:
-            test = (algorithm,)
-        window.modelVar1.trace('w', algorithm_list)
-        # window.modelVar1.set(test) # *window.choices_dict[chosen_model]
-        #print(window.modelVar.get())
+        print(algorithm_list)
+
         print("TODO implement select_model/PASEporAQUI")
-
-    # def fun2(self, *args):
-    #     print(self.modelVar1.get())
-
+        
     def start_training(self, window):
 
         # Code for training goes here
@@ -173,7 +164,7 @@ class TrainScreen(Frame):
         self.modelVar.set('Bayes')
         self.modelVar1.set('Choose algorithm')
         print(self.choices_dict[self.modelVar.get()])
-        #self.modelVar.trace('w', self.choices_dict[self.modelVar.get()])
+        # self.modelVar.trace('w', self.choices_dict[self.modelVar.get()])
         self.popupMenu = OptionMenu(self.selectModel_Frame, self.modelVar, *self.choices_dict,
                                     command=lambda putoNabo: send_event("SELECT_MODEL"))
         self.popupMenu1 = OptionMenu(self.selectModel_Frame, self.modelVar1, *self.choices_dict[self.modelVar.get()])
@@ -185,7 +176,7 @@ class TrainScreen(Frame):
         self.imgModel_lbl.pack(side=LEFT)
         self.popupMenu.pack(side=TOP, padx=10)
         self.popupMenu1.pack(side=LEFT, padx=10)
-        #self.selectModel_lbl.pack(side=TOP, padx=10)
+        # self.selectModel_lbl.pack(side=TOP, padx=10)
 
         # start training Button Frame ---------------------------------------------------------------------->
         self.startTraining_Frame = Frame(self.root)
@@ -208,5 +199,3 @@ class TrainScreen(Frame):
 
     def get_model_menu(self):
         return self.modelVar
-
-
