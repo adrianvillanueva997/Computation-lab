@@ -100,7 +100,7 @@ class ClassifyScreen(Frame):
         self.startTraining_btn.pack()
 
         self.exit_Frame.grid(row=0, column=0, columnspan=3, sticky=E)
-        self.title_Frame.grid(row=1, column=0, columnspan=3, pady=45, sticky=N + S)
+        self.title_Frame.grid(row=1, column=0, columnspan=3, pady=95, sticky=N+S)
         self.center_Frame.grid(row=2, column=0, columnspan=3, padx=65, sticky=N + S)
         self.selectModel_Frame.grid(row=3, column=0, padx=65, sticky=W)
         self.buttonLeft_Frame.grid(row=3, column=1, padx=65, sticky=E)

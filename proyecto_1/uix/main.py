@@ -8,8 +8,8 @@ class MainApp(Tk):
     def __init__(self, *args, **kwargs):
         Tk.__init__(self, *args, **kwargs)
         self.title("Bienvenidos")
-        self.geometry('800x600')
-        self.minsize(800, 600)
+        self.geometry('950x850')
+        self.minsize(950, 850)
         self.config(bd='10')
         self.config(relief='groove')
         # self.config(bg='#cbccd1')

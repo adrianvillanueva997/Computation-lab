@@ -65,7 +65,7 @@ class MainScreen(Frame):
         # Three Dudes Inc. logo
         self.tdiName_Frame = Frame(self.root)
 
-        self.tdiName_lbl = Label(self.tdiName_Frame, text='Three Dudes Inc.', bg='#cbccd1')
+        self.tdiName_lbl = Label(self.tdiName_Frame, text='Three Dudes Inc.', bg='#cbccd1', pady=20)
         self.tdiName_lbl.config(font=("Courier", 34))
         self.tdiName_lbl.pack()
 
@@ -91,9 +91,9 @@ class MainScreen(Frame):
         # posicion de los mainFrame en el grid
         self.exit_Frame.grid(row=0, column=0, columnspan=2, sticky=E, padx=5, pady=5)
         self.logo_Frame.grid(row=1, column=0, columnspan=2, sticky=N + S + E + W)
-        self.tdiName_Frame.grid(row=2, column=0, columnspan=2, sticky=N + S)
-        self.btn_left_Frame.grid(row=3, column=0, sticky=W, padx=85, pady=65)
-        self.btn_right_Frame.grid(row=3, column=1, sticky=E, padx=85, pady=65)
+        self.tdiName_Frame.grid(row=2, column=0, columnspan=2, sticky=N + S, padx=10, pady=10)
+        self.btn_left_Frame.grid(row=3, column=0, sticky=W, padx=85, pady=115)
+        self.btn_right_Frame.grid(row=3, column=1, sticky=E, padx=85, pady=115)
 
         self.root.rowconfigure(1, weight=1)
         self.root.columnconfigure(0, weight=1)
