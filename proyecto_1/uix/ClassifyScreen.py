@@ -1,6 +1,7 @@
 from tkinter import *
 
 from proyecto_1.uix import MainScreen as MS
+from tkinter.filedialog import askdirectory
 
 
 class ClassifyScreenController():
@@ -11,9 +12,9 @@ class ClassifyScreenController():
         elif command == "BACK":
             self.goto_previous(window)
         elif command == "SELECT_PATH":
-            self.select_path()
+            self.select_path(window)
         elif command == "SELECT_MODEL":
-            self.select_model()
+            self.select_model(window)
         elif command == "IMPORT_MODEL":
             self.import_model()
         elif command == "CLASSIFY":
@@ -28,10 +29,14 @@ class ClassifyScreenController():
         window.root.remove_frame()
         MS.MainScreen(window.root)
 
-    def select_path(self):
+    def select_path(self, window):
+        folder = askdirectory()
+        window.selectPath_entry.delete(0, END)
+        window.selectPath_entry.insert(END, folder)
         print("TODO implement select_path")
 
-    def select_model(self):
+    def select_model(self, window):
+
         print("TODO implement select_model")
 
     def import_model(self):
@@ -51,8 +56,8 @@ class ClassifyScreen(Frame):
 
         self.controller = ClassifyScreenController()
 
-        def send_event(command):
-            self.controller.handle_event(self, command)
+        def send_event(command, **kwargs):
+            self.controller.handle_event(self, command, **kwargs)
 
         self.exit_btn = Button(self.exit_Frame, text='Exit', padx=5, pady=5, command=lambda: send_event("EXIT"))
         self.back_btn = Button(self.exit_Frame, text='Back', padx=5, pady=5, command=lambda: send_event("BACK"))
@@ -65,13 +70,13 @@ class ClassifyScreen(Frame):
         self.someTitle_lbl.config(font=("Courier", 34))
         self.someTitle_lbl.pack()
 
-        # center table Frame ------------------------------------------------------------------->
+        # center table Frame ------------------------------------------------------------------- >
         self.center_Frame = Frame(self.root, pady=130, bg='#cbccd1')
         self.center_Canvas = Canvas(self.center_Frame, bg='#b8b8b8')
         self.myImgReviews = PhotoImage(file='resources/reviews1.png')
         self.imgReviews_lbl = Label(self.center_Canvas, image=self.myImgReviews)
         self.imgReviews_lbl.config(bg='#b8b8b8')
-        self.selectPath_entry = Entry(self.center_Canvas, justify='right')
+        self.selectPath_entry = Entry(self.center_Canvas, justify='left')
         self.selectPath_btn = Button(self.center_Canvas, text='Select Path', command=lambda: send_event("SELECT_PATH"))
         self.center_Canvas.pack()
         self.imgReviews_lbl.pack(side=LEFT, padx=15, pady=15)
@@ -82,6 +87,8 @@ class ClassifyScreen(Frame):
         self.selectModel_Frame = Frame(self.root, pady=15, bg='#cbccd1')
         self.myImgModel = PhotoImage(file='resources/selectModel.png')
         self.imgModel_lbl = Label(self.selectModel_Frame, image=self.myImgModel)
+
+        #self.modelVar.trace('w', self.select_model)
         self.model_entry = Entry(self.selectModel_Frame, justify='right')
         self.model_btn = Button(self.selectModel_Frame, text='Select Model', padx=10,
                                 command=lambda: send_event("SELECT_MODEL"))

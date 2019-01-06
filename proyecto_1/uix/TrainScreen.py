@@ -2,6 +2,8 @@ from tkinter import *
 
 from proyecto_1.uix import MainScreen as MS
 from proyecto_1.uix import TrainingResultScreen as TRS
+from tkinter.filedialog import askdirectory
+
 
 
 class TrainScreenController():
@@ -13,11 +15,11 @@ class TrainScreenController():
             self.goto_previous(window)
         elif command == "SELECT_PATH":
             if 'label' in kwargs:
-                self.select_path(label=kwargs.get('label'))
+                self.select_path(window, label=kwargs.get('label'))
             else:
                 print("ERROR: Needs a parameter \"label\"")
         elif command == "SELECT_MODEL":
-            self.select_model()
+                self.select_model(window)
         elif command == "START_TRAINING":
             self.start_training(window)
         else:
@@ -30,11 +32,36 @@ class TrainScreenController():
         window.root.remove_frame()
         MS.MainScreen(window.root)
 
-    def select_path(self, label):
+    def select_path(self, window, label):
+        folder = askdirectory()
+        if label == "Good":
+            window.selectGood_entry.delete(0, END)
+            window.selectGood_entry.insert(END, folder)
+        elif label == "Neutral":
+            window.selectNeutral_entry.delete(0, END)
+            window.selectNeutral_entry.insert(END, folder)
+        elif label == "Bad":
+            window.selectBad_entry.delete(0, END)
+            window.selectBad_entry.insert(END, folder)
+        else:
+            print("Path not found!")
+        print(folder)
         print("TODO implement select_path")
 
-    def select_model(self):
-        print("TODO implement select_model")
+    def select_model(self, window):
+
+        chosen_model = window.modelVar.get()
+        algorithm_list = window.choices_dict[chosen_model]
+        algorithm_list = tuple(algorithm_list)
+        for algorithm in algorithm_list:
+            test = (algorithm,)
+        window.modelVar1.trace('w', algorithm_list)
+        # window.modelVar1.set(test) # *window.choices_dict[chosen_model]
+        #print(window.modelVar.get())
+        print("TODO implement select_model/PASEporAQUI")
+
+    # def fun2(self, *args):
+    #     print(self.modelVar1.get())
 
     def start_training(self, window):
 
@@ -53,8 +80,8 @@ class TrainScreen(Frame):
 
         self.controller = TrainScreenController()
 
-        def send_event(command):
-            self.controller.handle_event(self, command)
+        def send_event(command, **kwargs):
+            self.controller.handle_event(self, command, **kwargs)
 
         self.exit_btn = Button(self.exit_Frame, text='Exit', padx=5, pady=5, command=lambda: send_event("EXIT"))
         self.back_btn = Button(self.exit_Frame, text='Back', padx=5, pady=5, command=lambda: send_event("BACK"))
@@ -90,15 +117,15 @@ class TrainScreen(Frame):
         self.imgModelSad_lbl = Label(self.selectPathTable_Frame, image=self.myImgSad)
         self.imgModelSad_lbl.config(pady=10, bg='#eaeaea')
         # Path Entry + button
-        self.selectGood_entry = Entry(self.selectPathTable_Frame, justify='right')
+        self.selectGood_entry = Entry(self.selectPathTable_Frame, justify='left')
         self.selectButton_btn = Button(self.selectPathTable_Frame, text='Select Path',
                                        command=lambda: send_event("SELECT_PATH", label="Good"))
 
-        self.selectNeutral_entry = Entry(self.selectPathTable_Frame, justify='right')
+        self.selectNeutral_entry = Entry(self.selectPathTable_Frame, justify='left')
         self.selectButton1_btn = Button(self.selectPathTable_Frame, text='Select Path',
                                         command=lambda: send_event("SELECT_PATH", label="Neutral"))
 
-        self.selectBad_entry = Entry(self.selectPathTable_Frame, justify='right')
+        self.selectBad_entry = Entry(self.selectPathTable_Frame, justify='left')
         self.selectButton2_btn = Button(self.selectPathTable_Frame, text='Select Path',
                                         command=lambda: send_event("SELECT_PATH", label="Bad"))
         # Grid Location
@@ -123,13 +150,42 @@ class TrainScreen(Frame):
         # self.imgModel_lbl.pack(fill="both", expand=True)
         self.imgModel_lbl.config(bg='#eaeaea')
         # entry + select btn right Frame
-        self.selectModel_entry = Entry(self.selectModelGrid_Frame, justify='right')
-        self.selectModel_btn = Button(self.selectModelGrid_Frame, text='Select Model',
-                                      command=lambda: send_event("SELECT_MODEL"))
+        self.modelVar = StringVar()
+        self.modelVar1 = StringVar()
+        choices_bayes = ['Multinomial', 'Naive', 'Bernoulli', 'Gaussian']
+        choices_ada = ['Classification']
+        choices_trees = ['Classification', 'Extra-Classification']
+        choices_gradient = ['Booster', 'Stochastic']
+        choices_neightbors = ['K', 'Radius']
+        choices_svm = ['Classification', 'Nu-Classification', 'Linear Classification']
+        choices_neuralNetwork = ['MLP', 'CNN']
+        choices_gaussianClassification = ['Gaussian Classifier']
+        self.choices_dict = {
+            'Bayes': choices_bayes,
+            'Ada': choices_ada,
+            'Trees': choices_trees,
+            'Gradient': choices_gradient,
+            'Neightbors': choices_neightbors,
+            'SVM': choices_svm,
+            'Neural Network': choices_neuralNetwork,
+            'Gaussian': choices_gaussianClassification
+        }
+        self.modelVar.set('Bayes')
+        self.modelVar1.set('Choose algorithm')
+        print(self.choices_dict[self.modelVar.get()])
+        #self.modelVar.trace('w', self.choices_dict[self.modelVar.get()])
+        self.popupMenu = OptionMenu(self.selectModel_Frame, self.modelVar, *self.choices_dict,
+                                    command=lambda putoNabo: send_event("SELECT_MODEL"))
+        self.popupMenu1 = OptionMenu(self.selectModel_Frame, self.modelVar1, *self.choices_dict[self.modelVar.get()])
+        # self.selectModel_lbl = Label(self.selectModel_Frame, text='Chose a Model')
+        # self.selectModel_entry = Entry(self.selectModelGrid_Frame, justify='right')
+        # self.selectModel_btn = Button(self.selectModelGrid_Frame, text='Select Model',
+        #                               command=lambda: send_event("SELECT_MODEL"))
         # Grid location
-        self.imgModel_lbl.grid(row=1, column=0, rowspan=2)
-        self.selectModel_entry.grid(row=1, column=1)
-        self.selectModel_btn.grid(row=2, column=1)
+        self.imgModel_lbl.pack(side=LEFT)
+        self.popupMenu.pack(side=TOP, padx=10)
+        self.popupMenu1.pack(side=LEFT, padx=10)
+        #self.selectModel_lbl.pack(side=TOP, padx=10)
 
         # start training Button Frame ---------------------------------------------------------------------->
         self.startTraining_Frame = Frame(self.root)
@@ -149,3 +205,8 @@ class TrainScreen(Frame):
         self.root.columnconfigure(1, weight=1)
 
         self.root.mainloop()
+
+    def get_model_menu(self):
+        return self.modelVar
+
+

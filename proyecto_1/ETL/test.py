@@ -31,3 +31,4 @@ if __name__ == '__main__':
     print(prediction)
     vectorizer.update_unlabeled_dataframe(predicted_data=prediction)
     vectorizer.plot_dataframe()
+    vectorizer.export_dataframe_csv(path='', model_name='export')

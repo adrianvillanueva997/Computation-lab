@@ -131,5 +131,12 @@ class Vectorizer:
         plt.show()
         return plot
 
-    def export_dataframe_csv(self):
-        self.__data_frame.to_csv('export.csv')
+    def export_dataframe_csv(self, path, model_name):
+        try:
+            extension = '.csv'
+            file_name = str(model_name) + str(extension)
+            full_path = os.path.join(path, file_name)
+            self.__data_frame.to_csv(full_path)
+        except Exception as e:
+            print(e)
+
