@@ -78,7 +78,7 @@ class TrainingResultScreen(Frame):
         self.saveModel_btn.pack(side=RIGHT, padx=10)
 
         self.exit_Frame.grid(row=0, column=0, columnspan=2, sticky=E)
-        self.title_Frame.grid(row=1, column=0, columnspan=2, pady=45, sticky=N + S)
+        self.title_Frame.grid(row=1, column=0, columnspan=2, pady=68, sticky=N + S)
         self.center_Frame.grid(row=2, column=0, columnspan=2, padx=65, sticky=N + S)
         self.returnMenu_Frame.grid(row=3, column=0, padx=65, sticky=W)
         self.saveModel_Frame.grid(row=3, column=1, padx=65, sticky=E)
