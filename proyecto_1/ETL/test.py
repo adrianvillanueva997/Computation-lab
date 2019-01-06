@@ -16,7 +16,7 @@ if __name__ == '__main__':
     vectorizer.export_vectorizer(path='', model_name='test')
     vectorizer.plot_dataframe()
     models = Models.Models(x_train, y_train, x_test, y_test)
-    models.naive_bayes_gaussian()
+    models.k_neighbors_classifier()
     cross_validation_score, conf_matrix, cross_validation_variance, classification_score = models.generate_classification_model_statistics()
     print(f'Cross Validation score: {cross_validation_score}')
     print(f'Confussion matrix: {conf_matrix}')
@@ -30,3 +30,4 @@ if __name__ == '__main__':
     prediction = models.predict(x_unlabeled)
     print(prediction)
     vectorizer.update_unlabeled_dataframe(predicted_data=prediction)
+    vectorizer.plot_dataframe()

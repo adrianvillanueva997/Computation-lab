@@ -123,10 +123,6 @@ class Vectorizer:
 
     def update_unlabeled_dataframe(self, predicted_data):
         self.__data_frame['labels'] = predicted_data
-        print(self.__data_frame)
-        self.__data_frame['labels'].value_counts().plot('bar')
-        plt.show()
-        self.__data_frame.to_csv('export.csv', index=False)
 
     def plot_dataframe(self):
         plot = self.__data_frame['labels'].value_counts().plot('bar')
