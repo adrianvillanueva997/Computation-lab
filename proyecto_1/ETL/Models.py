@@ -1,8 +1,11 @@
-from sklearn.ensemble import GradientBoostingClassifier
+import itertools
+from keras import Sequential, layers
+from sklearn.ensemble import GradientBoostingClassifier, RandomForestClassifier, ExtraTreesClassifier, \
+    AdaBoostClassifier
 from sklearn.gaussian_process import GaussianProcessClassifier
 from sklearn.linear_model import SGDClassifier
-from sklearn.metrics import confusion_matrix
-from sklearn.model_selection import learning_curve
+from sklearn.metrics import confusion_matrix, classification_report
+from sklearn.model_selection import learning_curve, cross_val_score, KFold
 from sklearn.naive_bayes import MultinomialNB, BernoulliNB, GaussianNB
 import matplotlib.pyplot as plt
 import numpy as np
@@ -12,6 +15,8 @@ from sklearn.svm import SVC, NuSVC, LinearSVC
 from sklearn.tree import DecisionTreeClassifier
 import graphviz
 import sklearn.tree as tree
+import pickle
+import os
 
 
 class Models:
@@ -28,6 +33,7 @@ class Models:
         self.__x_test = x_test
         self.__y_train = y_train
         self.__y_test = y_test
+        self.__confussion_matrix = None
 
     def naive_bayes_multinomial(self, alpha=1.0, fit_prior=True):
         """
@@ -36,11 +42,9 @@ class Models:
         :param fit_prior: Whether to learn class prior probabilities or not.
         :return: probability, conf_matrix
         """
-        model = MultinomialNB(alpha=alpha, fit_prior=True)
+        model = MultinomialNB(alpha=alpha, fit_prior=fit_prior)
         model.fit(self.__x_train, self.__y_train)
         self.__model = model
-        probability, conf_matrix = self.__generate_prediction()
-        return probability, conf_matrix
 
     def naive_bayes_bernoulli(self, alpha=1.0, fit_prior=True):
         """
@@ -53,8 +57,6 @@ class Models:
         model = BernoulliNB(alpha=alpha, fit_prior=fit_prior)
         model.fit(self.__x_train, self.__y_train)
         self.__model = model
-        probability, conf_matrix = self.__generate_prediction()
-        return probability, conf_matrix
 
     def naive_bayes_gaussian(self):
         """
@@ -64,8 +66,11 @@ class Models:
         model = GaussianNB()
         model.fit(self.__x_train, self.__y_train)
         self.__model = model
-        probability, conf_matrix = self.__generate_prediction()
-        return probability, conf_matrix
+
+    def ada_classifier(self):
+        model = AdaBoostClassifier()
+        model.fit(self.__x_train, self.__y_train)
+        self.__model = model
 
     def tree_decision_classifier(self, criterion='gini', splitter='best', max_depth=None, min_samples_split=2,
                                  min_samples_leaf=1, min_weight_fraction_leaf=0., max_features=None, random_state=None):
@@ -92,8 +97,16 @@ class Models:
                                        max_depth=max_depth, random_state=random_state)
         model.fit(self.__x_train, self.__y_train)
         self.__model = model
-        probability, conf_matrix = self.__generate_prediction()
-        return probability, conf_matrix
+
+    def tree_random_forest(self):
+        model = RandomForestClassifier()
+        model.fit(self.__x_train, self.__y_train)
+        self.__model = model
+
+    def tree_extra_tree_classifier(self):
+        model = ExtraTreesClassifier()
+        model.fit(self.__x_train, self.__y_train)
+        self.__model = model
 
     def gradient_booster(self, loss='deviance', learning_rate=0.1, n_estimators=100, subsample=0.1,
                          criterion='friedman_mse', min_samples_split=2, min_samples_leaf=1,
@@ -125,8 +138,6 @@ class Models:
                                            min_impurity_decrease=min_impurity_decrease, random_state=random_state)
         model.fit(self.__x_train, self.__y_train)
         self.__model = model
-        probability, conf_matrix = self.__generate_prediction()
-        return probability, conf_matrix
 
     def gradient_stochastic_descent(self, loss='hinge'):
         """
@@ -139,8 +150,6 @@ class Models:
         model = SGDClassifier(loss=loss)
         model.fit(self.__x_train, self.__y_train)
         self.__model = model
-        probability, conf_matrix = self.__generate_prediction()
-        return probability, conf_matrix
 
     def k_neighbors_classifier(self, n_neighbours=5, weights='uniform', algorithm='auto', leaf_size=30, p=2,
                                metric='minkowski'):
@@ -165,8 +174,6 @@ class Models:
                                      leaf_size=leaf_size, p=p, metric=metric)
         model.fit(self.__x_train, self.__y_train)
         self.__model = model
-        probability, conf_matrix = self.__generate_prediction()
-        return probability, conf_matrix
 
     def r_neighbors_classifier(self, n_neighbours=5, weights='uniform', algorithm='auto', leaf_size=30, p=2,
                                metric='minkowski'):
@@ -191,8 +198,6 @@ class Models:
                                           leaf_size=leaf_size, p=p, metric=metric)
         model.fit(self.__x_train, self.__y_train)
         self.__model = model
-        probability, conf_matrix = self.__generate_prediction()
-        return probability, conf_matrix
 
     def svm_support_vector_classification(self, C=1.0, kernel='rbf', degree=3, gamma='auto', coef0=0, shrinking=True,
                                           probability=False, max_iter=1):
@@ -214,8 +219,6 @@ class Models:
                     probability=probability, max_iter=max_iter)
         model.fit(self.__x_train, self.__y_train)
         self.__model = model
-        probability, conf_matrix = self.__generate_prediction()
-        return probability, conf_matrix
 
     def svm_support_vector_nu_classification(self, nu=0.5, kernel='rbf', degree=3, gamma='auto', coef0=0,
                                              shrinking=True,
@@ -239,8 +242,6 @@ class Models:
                       probability=probability, max_iter=max_iter)
         model.fit(self.__x_train, self.__y_train)
         self.__model = model
-        probability, conf_matrix = self.__generate_prediction()
-        return probability, conf_matrix
 
     def svm_support_vector_linear_classification(self, penalty='l2', loss='squared_hinge', dual=True, C=1.0,
                                                  multi_class='ovr', fit_intercept=True, intercept_scaling=1,
@@ -268,8 +269,6 @@ class Models:
                           fit_intercept=fit_intercept, intercept_scaling=intercept_scaling, random_state=random_state)
         model.fit(self.__x_train, self.__y_train)
         self.__model = model
-        probability, conf_matrix = self.__generate_prediction()
-        return probability, conf_matrix
 
     def gaussian_process_classifier(self):
         """
@@ -279,8 +278,6 @@ class Models:
         model = GaussianProcessClassifier()
         model.fit(self.__x_train, self.__y_train)
         self.__model = model
-        probability, conf_matrix = self.__generate_prediction()
-        return probability, conf_matrix
 
     def neural_sklearn_mlp(self, hidden_layer_sizes=(100,), activation='relu', solver='adam', alpha=0.0001,
                            batch_size='auto', learning_rate='constant', learning_rate_init=0.001, power_t=0.5,
@@ -334,30 +331,71 @@ class Models:
                               beta_2=beta_2, n_iter_no_change=n_iter_no_change)
         model.fit(self.__x_train, self.__y_train)
         self.__model = model
-        probability, conf_matrix = self.__generate_prediction()
-        return probability, conf_matrix
 
-    def __generate_prediction(self):
+    def keras_sequential_model(self, vocabulary_size, maxlen, embedding_dim=50):
+        model = Sequential()
+
+        model.add(layers.Dense(10, input_dim=self.__x_train.shape[1], activation='relu'))
+        model.add(layers.GlobalMaxPool1D())
+        model.add(layers.Dense(1, activation='sigmoid'))
+        model.compile(loss='binary_crossentropy', optimizer='adam', metrics=['accuracy'])
+        model.summary()
+        loss, accuracy = model.evaluate(self.__x_train, self.__y_train, verbose=False)
+        print("Training Accuracy: {:.4f}".format(accuracy))
+        print("Training Loss: {:.4f}".format(loss))
+        loss, accuracy = model.evaluate(self.__x_train, self.__y_train, verbose=False)
+        print("Testing Accuracy:  {:.4f}".format(accuracy))
+        print("Testing Loss: {:.4f}".format(loss))
+        self.__model = model
+
+    def predict(self, unlabeled_data):
+        unlabeled_prediction = self.__model.predict(unlabeled_data)
+        return unlabeled_prediction
+
+    def generate_classification_model_statistics(self):
         """
         Method that generates the prediction value and confussion matrix
         :return:
         """
         prediction = self.__model.predict(self.__x_test)
-        probability = np.mean(prediction == self.__y_test)
         conf_matrix = confusion_matrix(self.__y_test, prediction)
-        return probability, conf_matrix
+        cv_score = cross_val_score(self.__model, self.__x_train, self.__y_train, cv=5)
+        cross_validation_score = cv_score.mean()
+        cross_validation_variance = cv_score.std()
+        classification_score = classification_report(self.__y_test, prediction)
+        self.__confussion_matrix = conf_matrix
+        return cross_validation_score, conf_matrix, cross_validation_variance, classification_score
 
-    def __generate_tree_graph(self):
+    def plot_tree_graph(self):
         """
-        For now this function is a TODO: make it work lol
+
         :return:
         """
-        dot_data = tree.export_graphviz(self.__model, out_file=None, filled=True, rounded=True, special_characters=True)
+        dot_data = tree.export_graphviz(self.__model, out_file=None,
+                                        feature_names=None,
+                                        class_names=['good', 'bad', 'neutral'],
+                                        filled=True, rounded=True,
+                                        special_characters=True)
         graph = graphviz.Source(dot_data)
         return graph
 
-    def generate_plot_learning_curve(self, title, X, y, ylim=None, cv=None, n_jobs=None,
-                                     train_sizes=np.linspace(.1, 1.0, 5)):
+    def export_model(self, path, model_name):
+        try:
+            extension = '.model'
+            file_name = str(model_name) + str(extension)
+            full_path = os.path.join(path, file_name)
+            pickle.dump(self.__model, open(full_path, "wb"))
+        except Exception as e:
+            print(e)
+
+    def load_model(self, path):
+        try:
+            self.__model = pickle.load(open(path, 'rb'))
+        except Exception as e:
+            print(e)
+
+    def plot_sklearn_learning_curve(self, title, X, y, ylim=None, cv=None, n_jobs=None,
+                                    train_sizes=np.linspace(.1, 1.0, 5)):
         """
         Generate a simple plot of the test and training learning curve.
 
@@ -434,4 +472,59 @@ class Models:
                  label="Cross-validation score")
 
         plt.legend(loc="best")
+        return plt
+
+    def plot_keras_model(self):
+        plt.style.use('ggplot')
+        acc = self.__model.history['acc']
+        val_acc = self.__model.history['val_acc']
+        loss = self.__model.history['loss']
+        val_loss = self.__model.history['val_loss']
+        x = range(1, len(acc) + 1)
+
+        plt.figure(figsize=(12, 5))
+        plt.subplot(1, 2, 1)
+        plt.plot(x, acc, 'b', label='Training acc')
+        plt.plot(x, val_acc, 'r', label='Validation acc')
+        plt.title('Training and validation accuracy')
+        plt.legend()
+        plt.subplot(1, 2, 2)
+        plt.plot(x, loss, 'b', label='Training loss')
+        plt.plot(x, val_loss, 'r', label='Validation loss')
+        plt.title('Training and validation loss')
+        plt.legend()
+        return plt
+
+    def plot_confusion_matrix(self, classes=['Good', 'Bad', 'Neutral'],
+                              normalize=False,
+                              title='Confusion matrix',
+                              cmap=plt.cm.Blues):
+        """
+        This function prints and plots the confusion matrix.
+        Normalization can be applied by setting `normalize=True`.
+        """
+        cm = self.__confussion_matrix
+        if normalize:
+            cm = self.__confussion_matrix.astype('float') / self.__confussion_matrix.sum(axis=1)[:, np.newaxis]
+            print("Normalized confusion matrix")
+        else:
+            print('Confusion matrix, without normalization')
+
+        plt.imshow(self.__confussion_matrix, interpolation='nearest', cmap=cmap)
+        plt.title(title)
+        plt.colorbar()
+        tick_marks = np.arange(len(classes))
+        plt.xticks(tick_marks, classes, rotation=45)
+        plt.yticks(tick_marks, classes)
+
+        fmt = '.2f' if normalize else 'd'
+        thresh = cm.max() / 2.
+        for i, j in itertools.product(range(cm.shape[0]), range(cm.shape[1])):
+            plt.text(j, i, format(cm[i, j], fmt),
+                     horizontalalignment="center",
+                     color="white" if cm[i, j] > thresh else "black")
+
+        plt.ylabel('True label')
+        plt.xlabel('Predicted label')
+        plt.tight_layout()
         return plt
