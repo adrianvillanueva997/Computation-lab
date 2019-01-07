@@ -2,9 +2,14 @@ from tkinter import *
 
 from proyecto_1.uix import MainScreen as MS
 from proyecto_1.uix import TrainScreen as TS
+from tkinter.filedialog import askdirectory,asksaveasfilename
 
 
-class TrainingResultScreenController():
+class TrainingResultScreenController:
+
+    def __init__(self, model, vectorizer):
+        self.model = model
+        self.vectorizer = vectorizer
 
     def handle_event(self, window, command, **kwargs):
         if command == "EXIT":
@@ -29,18 +34,20 @@ class TrainingResultScreenController():
         window.root.remove_frame()
         MS.MainScreen(window.root)
 
-    def save_model(self):
-        print("TODO implement save_model")
+    def save_model(self,model,vectorizer):
+        save_to = askdirectory()
+        model.export_model(save_to, "test_model_name")
+        vectorizer.export_vectorizer(save_to, "test_vectorizer_name")
 
 
 class TrainingResultScreen(Frame):
-    def __init__(self, master):
+    def __init__(self, master, model, vectorizer):
         Frame.__init__(self, master)
         self.root = master
 
         self.exit_Frame = Frame(self.root, padx=10, pady=10, bg='#cbccd1')
 
-        self.controller = TrainingResultScreenController()
+        self.controller = TrainingResultScreenController(model, vectorizer)
 
         def send_event(command):
             self.controller.handle_event(self, command)
@@ -73,7 +80,7 @@ class TrainingResultScreen(Frame):
 
         # Bottom right menu
         self.saveModel_Frame = Frame(self.root, pady=15, bg='#cbccd1')
-        self.saveModel_btn = Button(self.saveModel_Frame, text='Return to Menu', padx=10,
+        self.saveModel_btn = Button(self.saveModel_Frame, text='Save Model & Vectorizer', padx=10,
                                     command=lambda: send_event("SAVE_MODEL"))
         self.saveModel_btn.pack(side=RIGHT, padx=10)
 

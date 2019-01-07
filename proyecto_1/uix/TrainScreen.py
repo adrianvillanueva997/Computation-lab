@@ -3,7 +3,8 @@ from tkinter.filedialog import askdirectory
 
 from proyecto_1.uix import MainScreen as MS
 from proyecto_1.uix import TrainingResultScreen as TRS
-
+from proyecto_1.ETL import Trainer
+from proyecto_1.ETL import Models
 
 class TrainScreenController():
 
@@ -54,7 +55,7 @@ class TrainScreenController():
 
         menu.delete(0, END)
         for algorithm in algorithm_list:
-            menu.add_command(label = algorithm, command= lambda value=algorithm: window.modelVar1.set(value))
+            menu.add_command(label=algorithm, command=lambda value=algorithm: window.modelVar1.set(value))
 
         window.modelVar1.set(algorithm_list[0])
 
@@ -63,9 +64,24 @@ class TrainScreenController():
     def start_training(self, window):
 
         # Code for training goes here
+        path_label_good = window.selectGood_entry.get()
+        print(path_label_good)
+        path_label_neutral = window.selectNeutral_entry.get()
+        print(path_label_neutral)
+        path_label_bad= window.selectBad_entry.get()
+        print(path_label_bad)
+
+        if path_label_neutral and path_label_good and path_label_bad:
+            model, vectorizer = Trainer.train(path_label_good,path_label_neutral,path_label_bad,
+                                window.modelVar.get(),window.modelVar1.get())
+
+            window.root.remove_frame()
+            TRS.TrainingResultScreen(window.root, model, vectorizer)
+        else:
+            print(f"ERROR: Unvalid path or paths \n{path_label_good}\n{path_label_neutral}\n{path_label_bad}")
+
         # Change window when it's over
-        window.root.remove_frame()
-        TRS.TrainingResultScreen(window.root)
+
 
 
 class TrainScreen(Frame):
@@ -149,30 +165,15 @@ class TrainScreen(Frame):
         # entry + select btn right Frame
         self.modelVar = StringVar()
         self.modelVar1 = StringVar()
-        choices_bayes = ['Multinomial', 'Naive', 'Bernoulli', 'Gaussian']
-        choices_ada = ['Classification']
-        choices_trees = ['Classification', 'Extra-Classification']
-        choices_gradient = ['Booster', 'Stochastic']
-        choices_neightbors = ['K', 'Radius']
-        choices_svm = ['Classification', 'Nu-Classification', 'Linear Classification']
-        choices_neuralNetwork = ['MLP', 'CNN']
-        choices_gaussianClassification = ['Gaussian Classifier']
-        self.choices_dict = {
-            'Bayes': choices_bayes,
-            'Ada': choices_ada,
-            'Trees': choices_trees,
-            'Gradient': choices_gradient,
-            'Neightbors': choices_neightbors,
-            'SVM': choices_svm,
-            'Neural Network': choices_neuralNetwork,
-            'Gaussian': choices_gaussianClassification
-        }
-        self.modelVar.set(next(iter(self.choices_dict)))
-        print(self.choices_dict[self.modelVar.get()])
+
+        model_list = Models.choices_dict
+
+        self.modelVar.set(next(iter(model_list)))
+        print(model_list[self.modelVar.get()])
         # self.modelVar.trace('w', self.choices_dict[self.modelVar.get()])
-        self.popupMenu = OptionMenu(self.selectModel_Frame, self.modelVar, *self.choices_dict,
+        self.popupMenu = OptionMenu(self.selectModel_Frame, self.modelVar, *model_list,
                                     command=lambda needsanameforsomereason: send_event("SELECT_MODEL"))
-        self.popupMenu1 = OptionMenu(self.selectModel_Frame, self.modelVar1, *self.choices_dict[self.modelVar.get()])
+        self.popupMenu1 = OptionMenu(self.selectModel_Frame, self.modelVar1, *model_list[self.modelVar.get()])
         send_event("SELECT_MODEL")
 
         # self.selectModel_lbl = Label(self.selectModel_Frame, text='Chose a Model')
