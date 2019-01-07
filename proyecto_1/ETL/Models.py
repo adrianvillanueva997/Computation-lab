@@ -20,6 +20,18 @@ from sklearn.svm import SVC, NuSVC, LinearSVC
 from sklearn.tree import DecisionTreeClassifier
 
 
+CHOICES_DICT = {
+        'Bayes': ['Multinomial', 'Bernoulli', 'Gaussian'],
+        'Ada': ['Classification'],
+        'Trees': ['Classification', 'Extra-Classification', 'Random Forest'],
+        'Gradient': ['Booster', 'Stochastic'],
+        'Neightbors': ['K', 'Radius'],
+        'SVM': ['Classification', 'Nu-Classification', 'Linear Classification'],
+        'Neural Network': ['MLP', 'CNN'],
+        'Gaussian': ['Gaussian Classifier']
+}
+
+
 class Models:
     """
     Class that will have all the Machine Learning models that the application will use.
@@ -36,16 +48,7 @@ class Models:
         self.__y_test = y_test
         self.__confussion_matrix = None
 
-        self.choices_dict = {
-            'Bayes': ['Multinomial', 'Bernoulli', 'Gaussian'],
-            'Ada': ['Classification'],
-            'Trees': ['Classification', 'Extra-Classification', 'Random Forest'],
-            'Gradient': ['Booster', 'Stochastic'],
-            'Neightbors': ['K', 'Radius'],
-            'SVM': ['Classification', 'Nu-Classification', 'Linear Classification'],
-            'Neural Network': ['MLP', 'CNN'],
-            'Gaussian': ['Gaussian Classifier']
-        }
+
 
     def train(self, key1,key2):
         if key1 == 'Bayes':

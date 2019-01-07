@@ -50,7 +50,7 @@ class TrainScreenController():
 
     def select_model(self, window):
         chosen_model = window.modelVar.get()
-        algorithm_list = window.choices_dict[chosen_model]
+        algorithm_list = Models.CHOICES_DICT[chosen_model]
         menu = window.popupMenu1["menu"]
 
         menu.delete(0, END)
@@ -166,11 +166,11 @@ class TrainScreen(Frame):
         self.modelVar = StringVar()
         self.modelVar1 = StringVar()
 
-        model_list = Models.choices_dict
+        model_list = Models.CHOICES_DICT
 
         self.modelVar.set(next(iter(model_list)))
         print(model_list[self.modelVar.get()])
-        # self.modelVar.trace('w', self.choices_dict[self.modelVar.get()])
+        # self.modelVar.trace('w', self.CHOICES_DICT[self.modelVar.get()])
         self.popupMenu = OptionMenu(self.selectModel_Frame, self.modelVar, *model_list,
                                     command=lambda needsanameforsomereason: send_event("SELECT_MODEL"))
         self.popupMenu1 = OptionMenu(self.selectModel_Frame, self.modelVar1, *model_list[self.modelVar.get()])

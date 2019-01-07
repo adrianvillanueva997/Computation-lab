@@ -34,10 +34,10 @@ class TrainingResultScreenController:
         window.root.remove_frame()
         MS.MainScreen(window.root)
 
-    def save_model(self,model,vectorizer):
+    def save_model(self):
         save_to = askdirectory()
-        model.export_model(save_to, "test_model_name")
-        vectorizer.export_vectorizer(save_to, "test_vectorizer_name")
+        self.model.export_model(save_to, "test_model_name")
+        self.vectorizer.export_vectorizer(save_to, "test_vectorizer_name")
 
 
 class TrainingResultScreen(Frame):
