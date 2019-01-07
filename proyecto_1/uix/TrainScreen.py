@@ -50,7 +50,13 @@ class TrainScreenController():
     def select_model(self, window):
         chosen_model = window.modelVar.get()
         algorithm_list = window.choices_dict[chosen_model]
-        print(algorithm_list)
+        menu = window.popupMenu1["menu"]
+
+        menu.delete(0, END)
+        for algorithm in algorithm_list:
+            menu.add_command(label = algorithm, command= lambda value=algorithm: window.modelVar1.set(value))
+
+        window.modelVar1.set(algorithm_list[0])
 
         print("TODO implement select_model/PASEporAQUI")
         
@@ -161,13 +167,14 @@ class TrainScreen(Frame):
             'Neural Network': choices_neuralNetwork,
             'Gaussian': choices_gaussianClassification
         }
-        self.modelVar.set('Bayes')
-        self.modelVar1.set('Choose algorithm')
+        self.modelVar.set(next(iter(self.choices_dict)))
         print(self.choices_dict[self.modelVar.get()])
         # self.modelVar.trace('w', self.choices_dict[self.modelVar.get()])
         self.popupMenu = OptionMenu(self.selectModel_Frame, self.modelVar, *self.choices_dict,
-                                    command=lambda putoNabo: send_event("SELECT_MODEL"))
+                                    command=lambda needsanameforsomereason: send_event("SELECT_MODEL"))
         self.popupMenu1 = OptionMenu(self.selectModel_Frame, self.modelVar1, *self.choices_dict[self.modelVar.get()])
+        send_event("SELECT_MODEL")
+
         # self.selectModel_lbl = Label(self.selectModel_Frame, text='Chose a Model')
         # self.selectModel_entry = Entry(self.selectModelGrid_Frame, justify='right')
         # self.selectModel_btn = Button(self.selectModelGrid_Frame, text='Select Model',
