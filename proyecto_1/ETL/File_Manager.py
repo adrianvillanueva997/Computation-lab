@@ -69,3 +69,8 @@ class File_Manager:
         """
         files = self.__get_files()
         return len(files)
+
+    def write_file(self, text, file_name, path):
+        file_path = os.path.join(path, file_name)
+        with open(file_path, 'w', encoding='utf-8') as file:
+            file.write(text)

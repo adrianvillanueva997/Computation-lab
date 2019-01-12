@@ -7,7 +7,7 @@ from nltk.corpus import stopwords
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.model_selection import train_test_split
 
-from proyecto_1.ETL import Text_Procesing
+from proyecto_1.ETL import Text_Procesing, File_Manager
 
 
 class Vectorizer:
@@ -140,3 +140,22 @@ class Vectorizer:
         except Exception as e:
             print(e)
 
+    def export_reviews_to_files(self, g_path, n_path, b_path):
+        g_file_count = 1
+        n_file_count = 1
+        b_file_count = 1
+        fm = File_Manager.File_Manager()
+        g_reviews = self.__data_frame.loc[self.__data_frame['labels'] == 'G']
+        b_reviews = self.__data_frame.loc[self.__data_frame['labels'] == 'B']
+        n_reviews = self.__data_frame.loc[self.__data_frame['labels'] == 'N']
+
+        for review in g_reviews['reviews']:
+            fm.write_file(text=review, file_name=f'g_review_{str(g_file_count)}', path=g_path)
+            g_file_count += 1
+        for review in b_reviews['reviews']:
+            fm.write_file(text=review, file_name=f'b_review_{str(b_file_count)}', path=b_path)
+            b_file_count += 1
+        for review in n_reviews['reviews']:
+            fm.write_file(text=review, file_name=f'n_review_{str(n_file_count)}', path=n_path)
+            n_file_count += 1
+        print(f'[INFO] Exported: \nGood: {str(g_file_count)} \nBad: {str(b_file_count)} \nNeutral: {str(n_file_count)}')
