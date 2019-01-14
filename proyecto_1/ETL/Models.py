@@ -6,7 +6,6 @@ import graphviz
 import matplotlib.pyplot as plt
 import numpy as np
 import sklearn.tree as tree
-from keras import Sequential, layers
 from sklearn.ensemble import GradientBoostingClassifier, RandomForestClassifier, ExtraTreesClassifier, \
     AdaBoostClassifier
 from sklearn.gaussian_process import GaussianProcessClassifier
@@ -37,7 +36,7 @@ class Models:
     Class that will have all the Machine Learning models that the application will use.
     """
 
-    def __init__(self, x_train, y_train, x_test, y_test):
+    def __init__(self, x_train=None, y_train=None, x_test=None, y_test=None):
         """
         Class Constructor.
         """
@@ -396,22 +395,6 @@ class Models:
         model.fit(self.__x_train, self.__y_train)
         self.__model = model
 
-    def keras_sequential_model(self, vocabulary_size, maxlen, embedding_dim=50):
-        model = Sequential()
-
-        model.add(layers.Dense(10, input_dim=self.__x_train.shape[1], activation='relu'))
-        model.add(layers.GlobalMaxPool1D())
-        model.add(layers.Dense(1, activation='sigmoid'))
-        model.compile(loss='binary_crossentropy', optimizer='adam', metrics=['accuracy'])
-        model.summary()
-        loss, accuracy = model.evaluate(self.__x_train, self.__y_train, verbose=False)
-        print("Training Accuracy: {:.4f}".format(accuracy))
-        print("Training Loss: {:.4f}".format(loss))
-        loss, accuracy = model.evaluate(self.__x_train, self.__y_train, verbose=False)
-        print("Testing Accuracy:  {:.4f}".format(accuracy))
-        print("Testing Loss: {:.4f}".format(loss))
-        self.__model = model
-
     def predict(self, unlabeled_data):
         unlabeled_prediction = self.__model.predict(unlabeled_data)
         return unlabeled_prediction
@@ -538,26 +521,6 @@ class Models:
         plt.legend(loc="best")
         return plt
 
-    def plot_keras_model(self):
-        plt.style.use('ggplot')
-        acc = self.__model.history['acc']
-        val_acc = self.__model.history['val_acc']
-        loss = self.__model.history['loss']
-        val_loss = self.__model.history['val_loss']
-        x = range(1, len(acc) + 1)
-
-        plt.figure(figsize=(12, 5))
-        plt.subplot(1, 2, 1)
-        plt.plot(x, acc, 'b', label='Training acc')
-        plt.plot(x, val_acc, 'r', label='Validation acc')
-        plt.title('Training and validation accuracy')
-        plt.legend()
-        plt.subplot(1, 2, 2)
-        plt.plot(x, loss, 'b', label='Training loss')
-        plt.plot(x, val_loss, 'r', label='Validation loss')
-        plt.title('Training and validation loss')
-        plt.legend()
-        return plt
 
     def plot_confusion_matrix(self, classes=['Good', 'Bad', 'Neutral'],
                               normalize=False,

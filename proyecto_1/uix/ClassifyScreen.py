@@ -2,7 +2,8 @@ from tkinter import *
 
 from proyecto_1.uix import MainScreen as MS
 from tkinter.filedialog import askdirectory
-from proyecto_1.ETL import Models
+from proyecto_1.ETL import Models, Vectorizer, File_Manager
+from tkinter.filedialog import askdirectory
 
 
 class ClassifyScreenController():
@@ -20,6 +21,8 @@ class ClassifyScreenController():
             self.import_model()
         elif command == "CLASSIFY":
             self.classify()
+        elif command == "SELECT_VOCAB":
+            self.select_vocab(window)
         else:
             print("Unrecognized command %s" % command)
 
@@ -31,20 +34,39 @@ class ClassifyScreenController():
         MS.MainScreen(window.root)
 
     def select_path(self, window):
-        folder = askdirectory()
+        self.unlabeled_path = askdirectory()
         window.selectPath_entry.delete(0, END)
-        window.selectPath_entry.insert(END, folder)
-        print("TODO implement select_path")
+        window.selectPath_entry.insert(END, self.unlabeled_path)
 
     def select_model(self, window):
-        Models.load_model()
-        #generate_unlabeled_data(data)
+        self.model_path = askdirectory()
+        Models.load_model(self.model_path)
+        window.model_entry.delete(0, END)
+        window.model_entry.insert(END, self.vocab_path)
+
+    def select_vocab(self, window):
+        #This REALLY needs validation
+        self.vocab_path = askdirectory()
+        window.vector_entry.delete(0, END)
+        window.vector_entry.insert(END, self.vocab_path)
+
     def import_model(self):
         #Do we need this? Doesn't seem like so
         print("TODO implement import_model")
 
     def classify(self):
-        print("TODO implement classify")
+        fm = File_Manager.File_Manager()
+        unlabeled_reviews, u_file_names = fm.extract_data_from_files(self.unlabeled_path)
+        vectorizer = Vectorizer.Vectorizer()
+        fm.extract_data_from_files(unlabeled_reviews)
+        x_unlabeled = vectorizer.generate_unlabeled_data(u_file_names)
+        prediction = Models.Models().predict(x_unlabeled)
+
+        #Prints
+        print(prediction)
+        vectorizer.update_unlabeled_dataframe(predicted_data=prediction)
+        vectorizer.plot_dataframe()
+
 
 
 class ClassifyScreen(Frame):
@@ -102,8 +124,8 @@ class ClassifyScreen(Frame):
                                 command=lambda: send_event("SELECT_MODEL"))
         self.right_Frame = Frame(self.selectModel_Frame)
         self.vector_entry = Entry(self.selectModel_Frame, justify='left')
-        self.vector_btn = Button(self.selectModel_Frame, text='Select Vector', padx=10,
-                                command=lambda: send_event("SELECT_MODEL"))
+        self.vector_btn = Button(self.selectModel_Frame, text='Select Vocab', padx=10,
+                                command=lambda: send_event("SELECT_VOCAB"))
 
         self.imgModel_lbl.pack(side=LEFT, padx=5)
         self.left_Frame.pack(side=LEFT)

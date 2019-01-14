@@ -26,7 +26,7 @@ if __name__ == '__main__':
     plot.show()
     plot = models.plot_confusion_matrix()
     plot.show()
-    x_unlabeled = vectorier.generate_unlabzeled_data(u_file_names)
+    x_unlabeled = vectorizer.generate_unlabzeled_data(u_file_names)
     prediction = models.predict(x_unlabeled)
     print(prediction)
     vectorizer.update_unlabeled_dataframe(predicted_data=prediction)
