@@ -96,6 +96,7 @@ class ClassifyScreen(Frame):
         self.imgModel_lbl = Label(self.selectModel_Frame, image=self.myImgModel)
 
         #self.modelVar.trace('w', self.select_model)
+        self.left_Frame = Frame(self.selectModel_Frame)
         self.model_entry = Entry(self.selectModel_Frame, justify='right')
         self.model_btn = Button(self.selectModel_Frame, text='Select Model', padx=10,
                                 command=lambda: send_event("SELECT_MODEL"))
