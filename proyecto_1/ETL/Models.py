@@ -20,14 +20,15 @@ from sklearn.svm import SVC, NuSVC, LinearSVC
 from sklearn.tree import DecisionTreeClassifier
 
 CHOICES_DICT = {
-    'Bayes': ['Multinomial', 'Bernoulli', 'Gaussian'],
-    'Ada': ['Classification'],
     'Trees': ['Classification', 'Extra-Classification', 'Random Forest'],
-    'Gradient': ['Booster', 'Stochastic'],
-    'Neightbors': ['K', 'Radius'],
-    'SVM': ['Classification', 'Nu-Classification', 'Linear Classification'],
-    'Neural Network': ['MLP'],
-    'Gaussian': ['Gaussian Classifier']
+        'Bayes': ['Multinomial', 'Bernoulli', 'Gaussian'],
+        'Ada': ['Classification'],
+        'Trees': ['Classification', 'Extra-Classification', 'Random Forest'],
+        'Gradient': ['Booster', 'Stochastic'],
+        'Neightbors': ['K', 'Radius'],
+        'SVM': ['Classification', 'Nu-Classification', 'Linear Classification'],
+        'Neural Network': ['MLP'],
+        'Gaussian': ['Gaussian Classifier']
 }
 
 

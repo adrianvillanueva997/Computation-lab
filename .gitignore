@@ -83,3 +83,7 @@ fabric.properties
 \.idea/
 
 *.iml
+
+proyecto_1/ETL/__pycache__/
+
+proyecto_1/uix/__pycache__/

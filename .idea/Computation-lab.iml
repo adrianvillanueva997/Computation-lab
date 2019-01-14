@@ -11,7 +11,6 @@
     <orderEntry type="module" module-name="Video-Car-detector" />
   </component>
   <component name="TestRunnerService">
-    <option name="projectConfiguration" value="pytest" />
-    <option name="PROJECT_TEST_RUNNER" value="pytest" />
+    <option name="PROJECT_TEST_RUNNER" value="Unittests" />
   </component>
 </module>
