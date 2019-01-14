@@ -13,7 +13,7 @@ from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg, NavigationToolb
 
 
 
-class TrainingResultScreenController:
+class ClassifyResultsScreenController:
 
     def __init__(self, model, vectorizer):
         self.model = model
@@ -26,8 +26,8 @@ class TrainingResultScreenController:
             self.goto_previous(window)
         elif command == "RETURN_TO_MENU":
             self.goto_main_menu(window)
-        elif command == "SAVE_MODEL":
-            self.save_model()
+        elif command == "SAVE_REVIEWS":
+            self.goto_main_menu(window)
         else:
             print("Unrecognized command %s" % command)
 
@@ -42,20 +42,18 @@ class TrainingResultScreenController:
         window.root.remove_frame()
         MS.MainScreen(window.root)
 
-    def save_model(self):
-        save_to = askdirectory()
-        self.model.export_model(save_to, "test_model_name")
-        self.vectorizer.export_vectorizer(save_to, "test_vectorizer_name")
+    def save_reviews(self):
+        pass
 
 
-class TrainingResultScreen(Frame):
+class ClassifyResultsScreenController(Frame):
     def __init__(self, master, model, vectorizer):
         Frame.__init__(self, master)
         self.root = master
 
         self.exit_Frame = Frame(self.root, padx=10, pady=10, bg='#cbccd1')
 
-        self.controller = TrainingResultScreenController(model, vectorizer)
+        self.controller = ClassifyResultsScreenController()
 
         def send_event(command):
             self.controller.handle_event(self, command)
@@ -77,15 +75,11 @@ class TrainingResultScreen(Frame):
                                           command=lambda: send_event("EMPTY"))
         self.confusionMatrix_btn.config(font=("Courier", 18))
 
-            # Matplotlib code
-        # self.dataSpace_text = Text(self.center_Frame)
-        #plot = Models.Models().plot_confusion_matrix()
-        #data_space = FigureCanvasTkAgg(plot, self.center_Frame)
-        #data_space.show()
-        #data_space.get_tk_widget().pack(side=TOP)
+        # Matplotlib code
+        self.dataSpace_text = Text(self.center_Frame)
 
         self.confusionMatrix_btn.pack(side=TOP, anchor='nw', pady=5)
-        #self.dataSpace_text.pack(side=TOP)
+        self.dataSpace_text.pack(side=TOP)
 
 
         # Bottom left menu
@@ -94,17 +88,11 @@ class TrainingResultScreen(Frame):
                                      command=lambda: send_event("RETURN_TO_MENU"))
         self.returnMenu_btn.pack(side=LEFT, padx=10)
 
-        # Bottom right menu
-        self.saveModel_Frame = Frame(self.root, pady=15, bg='#cbccd1')
-        self.saveModel_btn = Button(self.saveModel_Frame, text='Save Model & Vectorizer', padx=10,
-                                    command=lambda: send_event("SAVE_MODEL"))
-        self.saveModel_btn.pack(side=RIGHT, padx=10)
 
         self.exit_Frame.grid(row=0, column=0, columnspan=2, sticky=E)
         self.title_Frame.grid(row=1, column=0, columnspan=2, pady=68, sticky=N + S)
         self.center_Frame.grid(row=2, column=0, columnspan=2, padx=65, sticky=N + S)
         self.returnMenu_Frame.grid(row=3, column=0, padx=65, sticky=W)
-        self.saveModel_Frame.grid(row=3, column=1, padx=65, sticky=E)
 
         self.root.rowconfigure(2, weight=1)
         self.root.columnconfigure(0, weight=1)
