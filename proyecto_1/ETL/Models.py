@@ -19,6 +19,17 @@ from sklearn.neural_network import MLPClassifier
 from sklearn.svm import SVC, NuSVC, LinearSVC
 from sklearn.tree import DecisionTreeClassifier
 
+CHOICES_DICT = {
+    'Bayes': ['Multinomial', 'Bernoulli', 'Gaussian'],
+    'Ada': ['Classification'],
+    'Trees': ['Classification', 'Extra-Classification', 'Random Forest'],
+    'Gradient': ['Booster', 'Stochastic'],
+    'Neightbors': ['K', 'Radius'],
+    'SVM': ['Classification', 'Nu-Classification', 'Linear Classification'],
+    'Neural Network': ['MLP'],
+    'Gaussian': ['Gaussian Classifier']
+}
+
 
 class Models:
     """
@@ -35,6 +46,57 @@ class Models:
         self.__y_train = y_train
         self.__y_test = y_test
         self.__confussion_matrix = None
+
+    def train(self, key1, key2):
+        if key1 == 'Bayes':
+            if key2 == 'Multinomial':
+                self.naive_bayes_multinomial()
+            elif key2 == 'Bernoulli':
+                self.naive_bayes_bernoulli()
+            elif key2 == 'Gaussian':
+                self.naive_bayes_gaussian()
+
+        elif key1 == 'Ada':
+            if key2 == 'Classification':
+                self.ada_classifier()
+
+        elif key1 == 'Trees':
+            if key2 == 'Classification':
+                self.tree_decision_classifier()
+            elif key2 == 'Extra-Classification':
+                self.tree_extra_tree_classifier()
+            elif key2 == 'Random Forest':
+                self.tree_random_forest()
+
+        elif key1 == 'Gradient':
+            if key2 == 'Booster':
+                self.gradient_booster()
+            elif key2 == 'Stochastic':
+                self.gradient_stochastic_descent()
+
+        elif key1 == 'Neightbors':
+            if key2 == 'K':
+                self.k_neighbors_classifier()
+            elif key2 == 'Radius':
+                self.r_neighbors_classifier()
+
+        elif key1 == 'SVM':
+            if key2 == 'Classification':
+                self.svm_support_vector_classification()
+            elif key2 == 'Nu-Classification':
+                self.svm_support_vector_nu_classification()
+            elif key2 == 'Linear Classification':
+                self.svm_support_vector_linear_classification()
+
+        elif key1 == 'Neural Network':
+            if key2 == 'MLP':
+                self.neural_sklearn_mlp()
+            elif key2 == 'CNN':
+                self.keras_sequential_model()
+
+        elif key1 == 'Gaussian':
+            if key2 == 'Gaussian Classifier':
+                self.gaussian_process_classifier()
 
     def naive_bayes_multinomial(self, alpha=1.0, fit_prior=True):
         """

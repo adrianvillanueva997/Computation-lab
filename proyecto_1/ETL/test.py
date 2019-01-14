@@ -16,7 +16,7 @@ if __name__ == '__main__':
     vectorizer.export_vectorizer(path='', model_name='test')
     vectorizer.plot_dataframe()
     models = Models.Models(x_train, y_train, x_test, y_test)
-    models.k_neighbors_classifier()
+    models.naive_bayes_multinomial()
     cross_validation_score, conf_matrix, cross_validation_variance, classification_score = models.generate_classification_model_statistics()
     print(f'Cross Validation score: {cross_validation_score}')
     print(f'Confussion matrix: {conf_matrix}')
@@ -31,3 +31,6 @@ if __name__ == '__main__':
     print(prediction)
     vectorizer.update_unlabeled_dataframe(predicted_data=prediction)
     vectorizer.plot_dataframe()
+    vectorizer.export_dataframe_csv(path='', model_name='export')
+    vectorizer.export_reviews_to_files(g_path=r'/home/xiao/Desktop/test/g/', n_path=r'/home/xiao/Desktop/test/n/',
+                                       b_path=r'/home/xiao/Desktop/test/b/')
