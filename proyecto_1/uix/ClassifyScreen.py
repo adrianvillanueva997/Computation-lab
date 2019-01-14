@@ -3,7 +3,7 @@ from tkinter import *
 from proyecto_1.uix import MainScreen as MS
 from tkinter.filedialog import askdirectory
 from proyecto_1.ETL import Models, Vectorizer, File_Manager
-from tkinter.filedialog import askdirectory
+from tkinter.filedialog import askdirectory,askopenfile
 
 
 class ClassifyScreenController():
@@ -39,20 +39,22 @@ class ClassifyScreenController():
         window.selectPath_entry.insert(END, self.unlabeled_path)
 
     def select_model(self, window):
-        self.model_path = askdirectory()
-        Models.load_model(self.model_path)
-        window.model_entry.delete(0, END)
-        window.model_entry.insert(END, self.vocab_path)
+        self.model_path = askopenfile()
+        if str(self.model_path).__contains__('.model'):
+            Models.Models().load_model(self.model_path)
+            window.model_entry.delete(0, END)
+            window.model_entry.insert(END, self.model_path)
+        else:
+            print("ERROR: Invalid model")
 
     def select_vocab(self, window):
         #This REALLY needs validation
-        self.vocab_path = askdirectory()
-        window.vector_entry.delete(0, END)
-        window.vector_entry.insert(END, self.vocab_path)
-
-    def import_model(self):
-        #Do we need this? Doesn't seem like so
-        print("TODO implement import_model")
+        self.vocab_path = askopenfile()
+        if str(self.vocab_path).__contains__('.vocab'):
+            window.vector_entry.delete(0, END)
+            window.vector_entry.insert(END, self.vocab_path)
+        else:
+            print("ERROR: Invalid vocab")
 
     def classify(self):
         fm = File_Manager.File_Manager()
