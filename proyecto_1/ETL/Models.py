@@ -27,7 +27,7 @@ CHOICES_DICT = {
         'Gradient': ['Booster', 'Stochastic'],
         'Neightbors': ['K', 'Radius'],
         'SVM': ['Classification', 'Nu-Classification', 'Linear Classification'],
-        'Neural Network': ['MLP', 'CNN'],
+        'Neural Network': ['MLP'],
         'Gaussian': ['Gaussian Classifier']
 }
 

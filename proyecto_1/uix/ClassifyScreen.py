@@ -2,6 +2,7 @@ from tkinter import *
 
 from proyecto_1.uix import MainScreen as MS
 from tkinter.filedialog import askdirectory
+from proyecto_1.ETL import Models
 
 
 class ClassifyScreenController():
@@ -36,10 +37,10 @@ class ClassifyScreenController():
         print("TODO implement select_path")
 
     def select_model(self, window):
-
-        print("TODO implement select_model")
-
+        Models.load_model()
+        #generate_unlabeled_data(data)
     def import_model(self):
+        #Do we need this? Doesn't seem like so
         print("TODO implement import_model")
 
     def classify(self):
