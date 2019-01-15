@@ -1,4 +1,5 @@
 from tkinter import *
+import os
 
 from matplotlib.figure import Figure
 
@@ -23,10 +24,10 @@ class ClassifyResultsScreenController:
             self.exit(window)
         elif command == "BACK":
             self.goto_previous(window)
-        elif command == "RETURN_TO_MENU":
-            self.goto_main_menu(window)
-        elif command == "SAVE_REVIEWS":
-            self.goto_main_menu(window)
+        elif command == "EXPORT_TO_CSV":
+            self.export_to_csv()
+        elif command == "EXPORT_TO_FOLDERS":
+            self.export_to_folders()
         else:
             print("Unrecognized command %s" % command)
 
@@ -41,11 +42,15 @@ class ClassifyResultsScreenController:
         window.root.remove_frame()
         MS.MainScreen(window.root)
 
-    def save_reviews(self):
+    def export_to_csv(self):
         pass
 
+    def export_to_folders(self):
+        path = askdirectory()
+        self.vectorizer.export_reviews_to_files(path)
 
-class ClassifyResultsScreenController(Frame):
+
+class ClassifyResultsScreen(Frame):
     def __init__(self, master, vectorizer):
         Frame.__init__(self, master)
         self.root = master
@@ -64,7 +69,7 @@ class ClassifyResultsScreenController(Frame):
 
         # some title Frame --------------------------------------------------------------------->
         self.title_Frame = Frame(self.root)
-        self.someTitle_lbl = Label(self.title_Frame, text='Training Results', bg='#cbccd1')
+        self.someTitle_lbl = Label(self.title_Frame, text='Classify Results', bg='#cbccd1')
         self.someTitle_lbl.config(font=("Courier", 34))
         self.someTitle_lbl.pack()
 
@@ -83,8 +88,8 @@ class ClassifyResultsScreenController(Frame):
 
         # Bottom left menu
         self.returnMenu_Frame = Frame(self.root, pady=15, bg='#cbccd1')
-        self.returnMenu_btn = Button(self.returnMenu_Frame, text='Return to Menu', padx=10,
-                                     command=lambda: send_event("RETURN_TO_MENU"))
+        self.returnMenu_btn = Button(self.returnMenu_Frame, text='Save to Folders', padx=10,
+                                     command=lambda: send_event("EXPORT_TO_FOLDERS"))
         self.returnMenu_btn.pack(side=LEFT, padx=10)
 
 

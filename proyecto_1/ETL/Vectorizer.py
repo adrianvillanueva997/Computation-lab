@@ -154,7 +154,7 @@ class Vectorizer:
         except Exception as e:
             print(e)
 
-    def export_reviews_to_files(self, g_path, n_path, b_path):
+    def export_reviews_to_files(self, path):
         g_file_count = 1
         n_file_count = 1
         b_file_count = 1
@@ -164,13 +164,13 @@ class Vectorizer:
         n_reviews = self.__data_frame.loc[self.__data_frame['labels'] == 'N']
 
         for review in g_reviews['reviews']:
-            fm.write_file(text=review, file_name=f'g_review_{str(g_file_count)}', path=g_path)
+            fm.write_file(text=review, file_name=f'g_review_{str(g_file_count)}', path=os.path.join(path, '/good/'))
             g_file_count += 1
         for review in b_reviews['reviews']:
-            fm.write_file(text=review, file_name=f'b_review_{str(b_file_count)}', path=b_path)
+            fm.write_file(text=review, file_name=f'b_review_{str(b_file_count)}', path=os.path.join(path, '/bad/'))
             b_file_count += 1
         for review in n_reviews['reviews']:
-            fm.write_file(text=review, file_name=f'n_review_{str(n_file_count)}', path=n_path)
+            fm.write_file(text=review, file_name=f'n_review_{str(n_file_count)}', path=os.path.join(path, '/neutral/'))
             n_file_count += 1
         print(f'[INFO] Exported: \nGood: {str(g_file_count)} \nBad: {str(b_file_count)} \nNeutral: {str(n_file_count)}')
 

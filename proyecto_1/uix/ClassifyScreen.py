@@ -14,10 +14,14 @@ class ClassifyScreenController():
             self.exit(window)
         elif command == "BACK":
             self.goto_previous(window)
-        elif command == "EXPORT_TO_FOLDERS":
-            pass
-        elif command == "EXPORT_TO_CSV":
-            pass
+        elif command == "SELECT_PATH":
+            self.select_path(window)
+        elif command == "SELECT_MODEL":
+            self.select_model(window)
+        elif command == "CLASSIFY":
+            self.classify(window)
+        elif command == "SELECT_VOCAB":
+            self.select_vocab(window)
         else:
             print("Unrecognized command %s" % command)
 
@@ -63,14 +67,11 @@ class ClassifyScreenController():
         #Prints
         print(prediction)
         vectorizer.update_unlabeled_dataframe(predicted_data=prediction)
-        vectorizer.plot_dataframe()
-        self.goto_classify_results(window, vectorizer)
 
-    def goto_classify_resutls(self,window,vectorizer):
         window.root.remove_frame()
         CRS.ClassifyResultsScreen(window.root, vectorizer)
 
-
+        vectorizer.plot_dataframe()
 
 
 class ClassifyScreen(Frame):
@@ -141,13 +142,13 @@ class ClassifyScreen(Frame):
 
         # Bottom right menu
         self.buttonLeft_Frame = Frame(self.root, bg='lightblue')
-        self.importModel_btn = Button(self.buttonLeft_Frame, text='Export to Folders', padx=10,pady=10,
-                                      command=lambda: send_event("EXPORT_TO_FOLDERS"))
+        self.importModel_btn = Button(self.buttonLeft_Frame, text='Import Model', padx=10,pady=10,
+                                      command=lambda: send_event("IMPORT_MODEL"))
         self.importModel_btn.pack(side=LEFT)
 
         self.buttonRight_Frame = Frame(self.root, bg='purple')
-        self.startTraining_btn = Button(self.buttonRight_Frame, text='Export to CSV', padx=10,pady=10,
-                                        command=lambda: send_event("EXPORT_TO_CSV"))
+        self.startTraining_btn = Button(self.buttonRight_Frame, text='Classify', padx=10,pady=10,
+                                        command=lambda: send_event("CLASSIFY"))
         self.startTraining_btn.pack()
 
         self.exit_Frame.grid(row=0, column=0, columnspan=3, sticky=N+S+W+E)
