@@ -78,6 +78,20 @@ class Vectorizer:
         self.__vectorizer = cv
         return x_train, x_test
 
+    def __term_frequency_vectorizer_train(self, x_train, x_test):
+        """
+        Convert a collection of text documents to a matrix of token counts
+        :param to_array:
+        """
+        tp = Text_Procesing.Text_Processing()
+        stop_words = set(stopwords.words('spanish'))
+        cv = TfidfVectorizer(tokenizer=tp.tokenizer, stop_words=stop_words)
+        cv.fit(x_train)
+        x_train = cv.transform(x_train).toarray()
+        x_test = cv.transform(x_test).toarray()
+        self.__vectorizer = cv
+        return x_train, x_test
+
     def export_vectorizer(self, path, model_name):
         try:
             extension = '.vocab'
