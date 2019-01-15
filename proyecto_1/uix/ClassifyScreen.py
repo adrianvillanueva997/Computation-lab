@@ -17,13 +17,13 @@ class ClassifyScreenController():
         elif command == "SELECT_MODEL":
             self.select_model(window)
         elif command == "SELECT_VECTOR":
-            self.select_path(window)
+            self.select_vector(window)
         elif command == "SELECT_GOOD":
-            self.select_path(window)
+            self.select_good(window)
         elif command == "SELECT_NEUTRAL":
-            self.select_path(window)
+            self.select_neutral(window)
         elif command == "SELECT_BAD":
-            self.select_path(window)
+            self.select_bad(window)
         elif command == "IMPORT_MODEL":
             self.import_model()
         elif command == "CLASSIFY":
@@ -44,6 +44,27 @@ class ClassifyScreenController():
         window.selectPath_entry.insert(END, folder)
         print("TODO implement select_path")
 
+    def select_good(self, window):
+        folder = askdirectory()
+        window.good_Entry.delete(0, END)
+        window.good_Entry.insert(END, folder)
+        print("TODO implement select_path")
+    def select_neutral(self, window):
+        folder = askdirectory()
+        window.neutral_Entry.delete(0, END)
+        window.neutral_Entry.insert(END, folder)
+        print("TODO implement select_path")
+    def select_bad(self, window):
+        folder = askdirectory()
+        window.bad_Entry.delete(0, END)
+        window.bad_Entry.insert(END, folder)
+        print("TODO implement select_path")
+
+    def select_vector(self, window):
+        folder = askdirectory()
+        window.vector_entry.delete(0, END)
+        window.vector_entry.insert(END, folder)
+        print("TODO implement select_path")
     def select_model(self, window):
         Models.load_model()
         #generate_unlabeled_data(data)
