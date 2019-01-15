@@ -19,16 +19,15 @@ from sklearn.neural_network import MLPClassifier
 from sklearn.svm import SVC, NuSVC, LinearSVC
 from sklearn.tree import DecisionTreeClassifier
 
-
 CHOICES_DICT = {
-        'Bayes': ['Multinomial', 'Bernoulli', 'Gaussian'],
-        'Ada': ['Classification'],
-        'Trees': ['Classification', 'Extra-Classification', 'Random Forest'],
-        'Gradient': ['Booster', 'Stochastic'],
-        'Neightbors': ['K', 'Radius'],
-        'SVM': ['Classification', 'Nu-Classification', 'Linear Classification'],
-        'Neural Network': ['MLP', 'CNN'],
-        'Gaussian': ['Gaussian Classifier']
+    'Bayes': ['Multinomial', 'Bernoulli', 'Gaussian'],
+    'Ada': ['Classification'],
+    'Trees': ['Classification', 'Extra-Classification', 'Random Forest'],
+    'Gradient': ['Booster', 'Stochastic'],
+    'Neightbors': ['K', 'Radius'],
+    'SVM': ['Classification', 'Nu-Classification', 'Linear Classification'],
+    'Neural Network': ['MLP'],
+    'Gaussian': ['Gaussian Classifier']
 }
 
 
@@ -48,9 +47,7 @@ class Models:
         self.__y_test = y_test
         self.__confussion_matrix = None
 
-
-
-    def train(self, key1,key2):
+    def train(self, key1, key2):
         if key1 == 'Bayes':
             if key2 == 'Multinomial':
                 self.naive_bayes_multinomial()
@@ -100,7 +97,6 @@ class Models:
         elif key1 == 'Gaussian':
             if key2 == 'Gaussian Classifier':
                 self.gaussian_process_classifier()
-
 
     def naive_bayes_multinomial(self, alpha=1.0, fit_prior=True):
         """
