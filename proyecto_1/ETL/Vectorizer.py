@@ -4,7 +4,7 @@ import pickle
 import matplotlib.pyplot as plt
 import pandas as pd
 from nltk.corpus import stopwords
-from sklearn.feature_extraction.text import CountVectorizer
+from sklearn.feature_extraction.text import CountVectorizer, TfidfVectorizer
 from sklearn.model_selection import train_test_split
 
 from proyecto_1.ETL import Text_Procesing, File_Manager
@@ -159,3 +159,17 @@ class Vectorizer:
             fm.write_file(text=review, file_name=f'n_review_{str(n_file_count)}', path=n_path)
             n_file_count += 1
         print(f'[INFO] Exported: \nGood: {str(g_file_count)} \nBad: {str(b_file_count)} \nNeutral: {str(n_file_count)}')
+
+    def __term_frequency_vectorizer_train(self, x_train, x_test):
+        """
+        Convert a collection of text documents to a matrix of token counts
+        :param to_array:
+        """
+        tp = Text_Procesing.Text_Processing()
+        stop_words = set(stopwords.words('spanish'))
+        cv = TfidfVectorizer(tokenizer=tp.tokenizer, stop_words=stop_words)
+        cv.fit(x_train)
+        x_train = cv.transform(x_train).toarray()
+        x_test = cv.transform(x_test).toarray()
+        self.__vectorizer = cv
+        return x_train, x_test

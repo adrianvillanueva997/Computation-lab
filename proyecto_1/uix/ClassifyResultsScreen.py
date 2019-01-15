@@ -15,8 +15,7 @@ from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg, NavigationToolb
 
 class ClassifyResultsScreenController:
 
-    def __init__(self, model, vectorizer):
-        self.model = model
+    def __init__(self, vectorizer):
         self.vectorizer = vectorizer
 
     def handle_event(self, window, command, **kwargs):
@@ -47,13 +46,13 @@ class ClassifyResultsScreenController:
 
 
 class ClassifyResultsScreenController(Frame):
-    def __init__(self, master, model, vectorizer):
+    def __init__(self, master, vectorizer):
         Frame.__init__(self, master)
         self.root = master
 
         self.exit_Frame = Frame(self.root, padx=10, pady=10, bg='#cbccd1')
 
-        self.controller = ClassifyResultsScreenController()
+        self.controller = ClassifyResultsScreenController(vectorizer)
 
         def send_event(command):
             self.controller.handle_event(self, command)

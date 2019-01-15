@@ -1,9 +1,10 @@
 from tkinter import *
 
 from proyecto_1.uix import MainScreen as MS
+from proyecto_1.uix import ClassifyResultsScreen as CRS
 from tkinter.filedialog import askdirectory
 from proyecto_1.ETL import Models, Vectorizer, File_Manager
-from tkinter.filedialog import askdirectory,askopenfile
+from tkinter.filedialog import askdirectory,askopenfilename
 
 
 class ClassifyScreenController():
@@ -13,16 +14,10 @@ class ClassifyScreenController():
             self.exit(window)
         elif command == "BACK":
             self.goto_previous(window)
-        elif command == "SELECT_PATH":
-            self.select_path(window)
-        elif command == "SELECT_MODEL":
-            self.select_model(window)
-        elif command == "IMPORT_MODEL":
-            self.import_model()
-        elif command == "CLASSIFY":
-            self.classify()
-        elif command == "SELECT_VOCAB":
-            self.select_vocab(window)
+        elif command == "EXPORT_TO_FOLDERS":
+            pass
+        elif command == "EXPORT_TO_CSV":
+            pass
         else:
             print("Unrecognized command %s" % command)
 
@@ -39,35 +34,42 @@ class ClassifyScreenController():
         window.selectPath_entry.insert(END, self.unlabeled_path)
 
     def select_model(self, window):
-        self.model_path = askopenfile()
+        self.model_path = askopenfilename()
         if str(self.model_path).__contains__('.model'):
-            Models.Models().load_model(self.model_path)
             window.model_entry.delete(0, END)
             window.model_entry.insert(END, self.model_path)
         else:
             print("ERROR: Invalid model")
 
     def select_vocab(self, window):
-        #This REALLY needs validation
-        self.vocab_path = askopenfile()
+        self.vocab_path = askopenfilename()
         if str(self.vocab_path).__contains__('.vocab'):
             window.vector_entry.delete(0, END)
             window.vector_entry.insert(END, self.vocab_path)
         else:
             print("ERROR: Invalid vocab")
 
-    def classify(self):
+    def classify(self, window):
+        #Check if all three fields are not null
         fm = File_Manager.File_Manager()
+        print(self.unlabeled_path)
         unlabeled_reviews, u_file_names = fm.extract_data_from_files(self.unlabeled_path)
-        vectorizer = Vectorizer.Vectorizer()
-        fm.extract_data_from_files(unlabeled_reviews)
+        vectorizer = Vectorizer.Vectorizer(u_reviews=unlabeled_reviews)
+        vectorizer.load_vectorizer(self.vocab_path)
         x_unlabeled = vectorizer.generate_unlabeled_data(u_file_names)
-        prediction = Models.Models().predict(x_unlabeled)
-
+        model = Models.Models()
+        model.load_model(self.model_path)
+        prediction = model.predict(x_unlabeled)
         #Prints
         print(prediction)
         vectorizer.update_unlabeled_dataframe(predicted_data=prediction)
         vectorizer.plot_dataframe()
+        self.goto_classify_results(window, vectorizer)
+
+    def goto_classify_resutls(self,window,vectorizer):
+        window.root.remove_frame()
+        CRS.ClassifyResultsScreen(window.root, vectorizer)
+
 
 
 
@@ -139,13 +141,13 @@ class ClassifyScreen(Frame):
 
         # Bottom right menu
         self.buttonLeft_Frame = Frame(self.root, bg='lightblue')
-        self.importModel_btn = Button(self.buttonLeft_Frame, text='Import Model', padx=10,pady=10,
-                                      command=lambda: send_event("IMPORT_MODEL"))
+        self.importModel_btn = Button(self.buttonLeft_Frame, text='Export to Folders', padx=10,pady=10,
+                                      command=lambda: send_event("EXPORT_TO_FOLDERS"))
         self.importModel_btn.pack(side=LEFT)
 
         self.buttonRight_Frame = Frame(self.root, bg='purple')
-        self.startTraining_btn = Button(self.buttonRight_Frame, text='Classify', padx=10,pady=10,
-                                        command=lambda: send_event("CLASSIFY"))
+        self.startTraining_btn = Button(self.buttonRight_Frame, text='Export to CSV', padx=10,pady=10,
+                                        command=lambda: send_event("EXPORT_TO_CSV"))
         self.startTraining_btn.pack()
 
         self.exit_Frame.grid(row=0, column=0, columnspan=3, sticky=N+S+W+E)

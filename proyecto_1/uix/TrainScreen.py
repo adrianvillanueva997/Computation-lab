@@ -74,13 +74,12 @@ class TrainScreenController():
         if path_label_neutral and path_label_good and path_label_bad:
             model, vectorizer = Trainer.train(path_label_good,path_label_neutral,path_label_bad,
                                 window.modelVar.get(),window.modelVar1.get())
-
+            #Change window
             window.root.remove_frame()
             TRS.TrainingResultScreen(window.root, model, vectorizer)
         else:
             print(f"ERROR: Unvalid path or paths \n{path_label_good}\n{path_label_neutral}\n{path_label_bad}")
 
-        # Change window when it's over
 
 
 
