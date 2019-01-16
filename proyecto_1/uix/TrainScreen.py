@@ -111,24 +111,24 @@ class TrainScreen(Frame):
 
         # Select Path Frame ---------------------------------------------------------------------->
         self.selectPath_Frame = Frame(self.root)
-        self.selectPath_Frame.config(bg='#cbccd1')
+        self.selectPath_Frame.config(bg='#cbccd1')#cbccd1
         # self.center_Canvas = Canvas(self.selectPath_Frame, bg='#b8b8b8')
         # self.center_Canvas.pack()
 
         self.selectPathTable_Frame = Frame(self.selectPath_Frame)
-        self.selectPathTable_Frame.pack(fill=BOTH, pady=150)
+        self.selectPathTable_Frame.pack(fill=BOTH, pady=100)
         # Good - Neutral - Bad icons
-        self.myImgHappy = PhotoImage(file='resources/happyIcon.png')
+        self.myImgHappy = PhotoImage(file='resources/GoodIcon.png')
         self.imgModelHappy_lbl = Label(self.selectPathTable_Frame, image=self.myImgHappy)
         self.imgModelHappy_lbl.config(bg='#eaeaea')
 
-        self.myImgNeutral = PhotoImage(file='resources/neutralIcon.png')
+        self.myImgNeutral = PhotoImage(file='resources/NeutralIcon.png')
         self.imgModelNeutral_lbl = Label(self.selectPathTable_Frame, image=self.myImgNeutral)
         self.imgModelNeutral_lbl.config(bg='#eaeaea')
 
-        self.myImgSad = PhotoImage(file='resources/sadIcon.png')
+        self.myImgSad = PhotoImage(file='resources/BadIcon.png')
         self.imgModelSad_lbl = Label(self.selectPathTable_Frame, image=self.myImgSad)
-        self.imgModelSad_lbl.config(pady=10, bg='#eaeaea')
+        self.imgModelSad_lbl.config(bg='#eaeaea')
         # Path Entry + button
         self.selectGood_entry = Entry(self.selectPathTable_Frame, justify='left')
         self.selectButton_btn = Button(self.selectPathTable_Frame, text='Select Path',
@@ -158,7 +158,7 @@ class TrainScreen(Frame):
         self.selectModelGrid_Frame = Frame(self.selectModel_Frame)
         self.selectModelGrid_Frame.pack(side='left', anchor='n')
         # img left Frame
-        self.myImgModel = PhotoImage(file='resources/selectModel.png')
+        self.myImgModel = PhotoImage(file='resources/ModelIcon.png')
         self.imgModel_lbl = Label(self.selectModelGrid_Frame, image=self.myImgModel)
         # self.imgModel_lbl.pack(fill="both", expand=True)
         self.imgModel_lbl.config(bg='#eaeaea')
@@ -188,8 +188,8 @@ class TrainScreen(Frame):
 
         # start training Button Frame ---------------------------------------------------------------------->
         self.startTraining_Frame = Frame(self.root)
-
-        self.startTraining_btn = Button(self.startTraining_Frame, text='Start Training', padx=10, pady=10,
+        self.myImg1 = PhotoImage(file='resources/StartTrainingButton.png')
+        self.startTraining_btn = Button(self.startTraining_Frame, image=self.myImg1, padx=10, pady=10,
                                         command=lambda: send_event("START_TRAINING"))
         self.startTraining_btn.pack()
 
