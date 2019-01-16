@@ -63,7 +63,7 @@ class MainScreen(Frame):
         self.img_lbl.config(bg='#cbccd1')
 
         # Three Dudes Inc. logo
-        self.tdiName_Frame = Frame(self.root)
+        self.tdiName_Frame = Frame(self.root, bg='#cbccd1')
 
         self.tdiName_lbl = Label(self.tdiName_Frame, text='Three Dudes Inc.', bg='#cbccd1', pady=20)
         self.tdiName_lbl.config(font=("Courier", 34))
@@ -77,10 +77,10 @@ class MainScreen(Frame):
         # self.btn_left_Frame.pack(side='left', fill="both", expand=True)
         # self.btn_right_Frame.pack(side='right', fill="both", expand=True)
 
-        self.myImg1 = PhotoImage(file='resources/training.png')
+        self.myImg1 = PhotoImage(file='resources/TrainingButton.png')
         self.entrenamiento_btn = Button(self.btn_left_Frame, image=self.myImg1, padx='5', pady='5',
                                         command=lambda: send_event("TRAINING"))
-        self.myImg2 = PhotoImage(file='resources/class.png')
+        self.myImg2 = PhotoImage(file='resources/ClassifyButton.png')
         self.clasificador_btn = Button(self.btn_right_Frame, image=self.myImg2, padx='5', pady='5',
                                        command=lambda: send_event("CLASSIFY"))
         # self.entrenamiento_btn = Button(self.btn_left_Frame, text='Entrenamiento',padx='10',pady='10')

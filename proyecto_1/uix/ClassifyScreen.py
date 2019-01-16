@@ -125,7 +125,7 @@ class ClassifyScreen(Frame):
         self.center_Frame = Frame(self.root, pady=130, bg='#cbccd1')
         self.center_Canvas = Canvas(self.center_Frame, bg='#b8b8b8')#b8b8b8
         #self.top_Frame = Frame(self.center_Canvas)
-        self.myImgReviews = PhotoImage(file='resources/reviews1.png')
+        self.myImgReviews = PhotoImage(file='resources/ReviewsIcon.png')
         self.imgReviews_lbl = Label(self.center_Canvas, image=self.myImgReviews)
         self.imgReviews_lbl.config(bg='#eaeaea', relief='sunken')
         self.selectPath_entry = Entry(self.center_Canvas, justify='left', relief=GROOVE)
@@ -142,38 +142,38 @@ class ClassifyScreen(Frame):
         # Unlabeled path Frame ------------------------------------------------------------------->
         self.unlabeledCenter_Frame = Frame(self.root, bg='#cbccd1')
 
-        self.top_Frame = Frame(self.unlabeledCenter_Frame, bg='#cbccd1')
-        self.good_Entry = Entry(self.top_Frame, justify=LEFT, relief=GROOVE)
-        self.good_Entry.configure(width=50)
-        self.good_btn = Button(self.top_Frame, text='Save Good', padx=10,cursor='hand2',
-                               command=lambda: send_event("SELECT_GOOD"))
-
-        self.mid_Frame = Frame(self.unlabeledCenter_Frame, bg='#cbccd1')
-        self.neutral_Entry = Entry(self.mid_Frame, justify=LEFT, relief=GROOVE)
-        self.neutral_Entry.configure(width=50)
-        self.neutral_btn = Button(self.mid_Frame, text='Save Neutral', padx=10,cursor='hand2',
-                                  command=lambda: send_event("SELECT_NEUTRAL"))
-
-        self.bottom_Frame = Frame(self.unlabeledCenter_Frame,bg='#cbccd1')
-        self.bad_Entry = Entry(self.bottom_Frame, justify=LEFT, relief=GROOVE)
-        self.bad_Entry.configure(width=50)
-        self.bad_btn = Button(self.bottom_Frame, text='Save Bad', padx=10,cursor='hand2',
-                              command=lambda: send_event("SELECT_BAD"))
-
-        self.top_Frame.pack(side=TOP)
-        self.mid_Frame.pack(side=TOP)
-        self.bottom_Frame.pack(side=TOP)
-        self.good_Entry.pack(side=LEFT, padx=20)
-        self.good_btn.pack(side=LEFT)
-        self.neutral_Entry.pack(side=LEFT, padx=20)
-        self.neutral_btn.pack(side=LEFT)
-        self.bad_Entry.pack(side=LEFT, padx=20)
-        self.bad_btn.pack(side=LEFT)
+        # self.top_Frame = Frame(self.unlabeledCenter_Frame, bg='#cbccd1')
+        # self.good_Entry = Entry(self.top_Frame, justify=LEFT, relief=GROOVE)
+        # self.good_Entry.configure(width=50)
+        # self.good_btn = Button(self.top_Frame, text='Save Good', padx=10,cursor='hand',
+        #                        command=lambda: send_event("SELECT_GOOD"))
+        #
+        # self.mid_Frame = Frame(self.unlabeledCenter_Frame, bg='#cbccd1')
+        # self.neutral_Entry = Entry(self.mid_Frame, justify=LEFT, relief=GROOVE)
+        # self.neutral_Entry.configure(width=50)
+        # self.neutral_btn = Button(self.mid_Frame, text='Save Neutral', padx=10,cursor='hand',
+        #                           command=lambda: send_event("SELECT_NEUTRAL"))
+        #
+        # self.bottom_Frame = Frame(self.unlabeledCenter_Frame,bg='#cbccd1')
+        # self.bad_Entry = Entry(self.bottom_Frame, justify=LEFT, relief=GROOVE)
+        # self.bad_Entry.configure(width=50)
+        # self.bad_btn = Button(self.bottom_Frame, text='Save Bad', padx=10,cursor='hand',
+        #                       command=lambda: send_event("SELECT_BAD"))
+        #
+        # self.top_Frame.pack(side=TOP)
+        # self.mid_Frame.pack(side=TOP)
+        # self.bottom_Frame.pack(side=TOP)
+        # self.good_Entry.pack(side=LEFT, padx=20)
+        # self.good_btn.pack(side=LEFT)
+        # self.neutral_Entry.pack(side=LEFT, padx=20)
+        # self.neutral_btn.pack(side=LEFT)
+        # self.bad_Entry.pack(side=LEFT, padx=20)
+        # self.bad_btn.pack(side=LEFT)
 
 
         # Bottom left menu ------------------------------------------------------------------->
         self.selectModel_Frame = Frame(self.root, pady=15, bg='#cbccd1')
-        self.myImgModel = PhotoImage(file='resources/selectModel.png')
+        self.myImgModel = PhotoImage(file='resources/ModelIcon1.png')
         self.imgModel_lbl = Label(self.selectModel_Frame, image=self.myImgModel)
         self.imgModel_lbl.configure(relief='sunken')
 
