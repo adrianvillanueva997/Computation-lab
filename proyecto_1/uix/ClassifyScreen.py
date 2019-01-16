@@ -110,7 +110,7 @@ class ClassifyScreen(Frame):
 
         self.exitButtons_Frame = Frame(self.exit_Frame, bg='#cbccd1', padx=10, pady=10)
         self.exit_btn = Button(self.exitButtons_Frame, text='Exit', padx=5, pady=5,cursor='hand2', command=lambda: send_event("EXIT"))
-        self.back_btn = Button(self.exitButtons_Frame, text='Back', padx=5, pady=5,cursor='hand', command=lambda: send_event("BACK"))
+        self.back_btn = Button(self.exitButtons_Frame, text='Back', padx=5, pady=5,cursor='hand2', command=lambda: send_event("BACK"))
         self.exitButtons_Frame.pack(side='right')
         self.exit_btn.pack(side='right', fill="both", expand=True)
         self.back_btn.pack(side='right', fill="both", expand=True)
@@ -131,7 +131,7 @@ class ClassifyScreen(Frame):
         self.selectPath_entry = Entry(self.center_Canvas, justify='left', relief=GROOVE)
         self.selectPath_entry.configure(width=40)
         self.selectPath_btn = Button(self.center_Canvas, text='Select Path', command=lambda: send_event("SELECT_PATH"))
-        self.selectPath_btn.configure(cursor='hand')
+        self.selectPath_btn.configure(cursor='hand2')
 
         self.center_Canvas.pack(padx=50, ipadx=150)
         #self.top_Frame.pack(side=TOP)
@@ -145,19 +145,19 @@ class ClassifyScreen(Frame):
         self.top_Frame = Frame(self.unlabeledCenter_Frame, bg='#cbccd1')
         self.good_Entry = Entry(self.top_Frame, justify=LEFT, relief=GROOVE)
         self.good_Entry.configure(width=50)
-        self.good_btn = Button(self.top_Frame, text='Save Good', padx=10,cursor='hand',
+        self.good_btn = Button(self.top_Frame, text='Save Good', padx=10,cursor='hand2',
                                command=lambda: send_event("SELECT_GOOD"))
 
         self.mid_Frame = Frame(self.unlabeledCenter_Frame, bg='#cbccd1')
         self.neutral_Entry = Entry(self.mid_Frame, justify=LEFT, relief=GROOVE)
         self.neutral_Entry.configure(width=50)
-        self.neutral_btn = Button(self.mid_Frame, text='Save Neutral', padx=10,cursor='hand',
+        self.neutral_btn = Button(self.mid_Frame, text='Save Neutral', padx=10,cursor='hand2',
                                   command=lambda: send_event("SELECT_NEUTRAL"))
 
         self.bottom_Frame = Frame(self.unlabeledCenter_Frame,bg='#cbccd1')
         self.bad_Entry = Entry(self.bottom_Frame, justify=LEFT, relief=GROOVE)
         self.bad_Entry.configure(width=50)
-        self.bad_btn = Button(self.bottom_Frame, text='Save Bad', padx=10,cursor='hand',
+        self.bad_btn = Button(self.bottom_Frame, text='Save Bad', padx=10,cursor='hand2',
                               command=lambda: send_event("SELECT_BAD"))
 
         self.top_Frame.pack(side=TOP)
@@ -181,11 +181,11 @@ class ClassifyScreen(Frame):
         self.left_Frame = Frame(self.selectModel_Frame)
         self.model_entry = Entry(self.selectModel_Frame, justify='left', relief=GROOVE)
         self.model_btn = Button(self.selectModel_Frame, text='Select Model', padx=10,
-                                command=lambda: send_event("SELECT_MODEL"),cursor='hand')
+                                command=lambda: send_event("SELECT_MODEL"),cursor='hand2')
         self.right_Frame = Frame(self.selectModel_Frame)
         self.vector_entry = Entry(self.selectModel_Frame, justify='left')
         self.vector_btn = Button(self.selectModel_Frame, text='Select Vector', padx=10,
-                                command=lambda: send_event("SELECT_MODEL"))
+                                command=lambda: send_event("SELECT_VOCAB"))
 
         self.imgModel_lbl.pack(side=LEFT, padx=5)
         self.left_Frame.pack(side=LEFT)
@@ -199,12 +199,12 @@ class ClassifyScreen(Frame):
         #self.rightBtn_Frame = Frame(self.root, bg='lightblue')
         self.buttonLeft_Frame = Frame(self.root, bg='lightblue')
         self.importModel_btn = Button(self.buttonLeft_Frame, text='Import Model', padx=10,pady=10,
-                                      command=lambda: send_event("IMPORT_MODEL"),cursor='hand')
+                                      command=lambda: send_event("IMPORT_MODEL"),cursor='hand2')
         self.importModel_btn.pack(side=RIGHT)
 
         self.buttonRight_Frame = Frame(self.root, bg='purple')
         self.startTraining_btn = Button(self.buttonRight_Frame, text='Classify', padx=10,pady=10,
-                                        command=lambda: send_event("CLASSIFY"),cursor='hand')
+                                        command=lambda: send_event("CLASSIFY"),cursor='hand2')
         self.startTraining_btn.pack()
 
         self.exit_Frame.grid(row=0, column=0, columnspan=3, sticky=N+S+W+E)
