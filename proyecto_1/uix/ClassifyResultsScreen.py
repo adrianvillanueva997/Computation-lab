@@ -1,7 +1,6 @@
 from tkinter import *
+from tkinter import ttk
 import os
-
-from matplotlib.figure import Figure
 
 from proyecto_1.uix import MainScreen as MS
 from proyecto_1.uix import TrainScreen as TS
@@ -10,6 +9,10 @@ from tkinter.filedialog import askdirectory,asksaveasfilename
 
 import matplotlib
 matplotlib.use("TkAgg")
+
+import matplotlib.pyplot as plt
+from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
+
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg, NavigationToolbar2Tk
 
 
@@ -74,16 +77,22 @@ class ClassifyResultsScreen(Frame):
         self.someTitle_lbl.pack()
 
         # center table Frame ------------------------------------------------------------------->
-        self.center_Frame = Frame(self.root, pady=75, bg='#cbccd1')
-        self.confusionMatrix_btn = Button(self.center_Frame, text='Confusion Matrix', bg='#cbccd1',
-                                          command=lambda: send_event("EMPTY"))
-        self.confusionMatrix_btn.config(font=("Courier", 18))
+        self.center_Frame = ttk.Notebook(self.root)
 
-        # Matplotlib code
-        self.dataSpace_text = Text(self.center_Frame)
 
-        self.confusionMatrix_btn.pack(side=TOP, anchor='nw', pady=5)
-        self.dataSpace_text.pack(side=TOP)
+        # Matplotlib code Graph 1
+
+        graph1 = Frame(self.center_Frame, bg='#cbccd1')
+
+        figure1 = plt.Figure(figsize=(6, 5), dpi=100)
+        ax1 = figure1.add_subplot(111)
+        bar1 = FigureCanvasTkAgg(figure1, graph1)
+        vectorizer.plot_dataframe(ax1)
+        ax1.set_title('Labels')
+
+        bar1.get_tk_widget().pack(side=TOP,fill=BOTH)
+
+        self.center_Frame.add(graph1,text="Labels")
 
 
         # Bottom left menu

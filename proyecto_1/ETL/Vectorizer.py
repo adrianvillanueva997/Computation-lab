@@ -140,10 +140,16 @@ class Vectorizer:
     def update_unlabeled_dataframe(self, predicted_data):
         self.__data_frame['labels'] = predicted_data
 
-    def plot_dataframe(self):
-        plot = self.__data_frame['labels'].value_counts().plot('bar')
-        plt.show()
-        return plot
+    def plot_dataframe(self, container=None):
+        if container == None:
+            plot = self.__data_frame['labels'].value_counts().plot('bar')
+            plt.show()
+            return plot
+        else:
+            self.__data_frame['labels'].value_counts().plot(kind="bar", legend=False, ax=container)
+
+
+
 
     def export_dataframe_csv(self, path, model_name):
         try:

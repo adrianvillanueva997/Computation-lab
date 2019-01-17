@@ -92,8 +92,6 @@ class ClassifyScreenController():
         window.root.remove_frame()
         CRS.ClassifyResultsScreen(window.root, vectorizer)
 
-        vectorizer.plot_dataframe()
-
 
 class ClassifyScreen(Frame):
     def __init__(self, master):
@@ -199,12 +197,12 @@ class ClassifyScreen(Frame):
         #self.rightBtn_Frame = Frame(self.root, bg='lightblue')
         self.buttonLeft_Frame = Frame(self.root, bg='lightblue')
         self.importModel_btn = Button(self.buttonLeft_Frame, text='Import Model', padx=10,pady=10,
-                                      command=lambda: send_event("IMPORT_MODEL"),cursor='hand')
+                                      command=lambda: send_event("IMPORT_MODEL"),cursor='hand2')
         self.importModel_btn.pack(side=RIGHT)
 
         self.buttonRight_Frame = Frame(self.root, bg='purple')
         self.startTraining_btn = Button(self.buttonRight_Frame, text='Classify', padx=10,pady=10,
-                                        command=lambda: send_event("CLASSIFY"),cursor='hand')
+                                        command=lambda: send_event("CLASSIFY"),cursor='hand2')
         self.startTraining_btn.pack()
 
         self.exit_Frame.grid(row=0, column=0, columnspan=3, sticky=N+S+W+E)
