@@ -1,7 +1,7 @@
 import itertools
 import os
 import pickle
-
+import pandas as pd
 import graphviz
 import matplotlib.pyplot as plt
 import numpy as np
@@ -494,6 +494,7 @@ class Models:
             be big enough to contain at least one sample from each class.
             (default: np.linspace(0.1, 1.0, 5))
         """
+
         plt.figure()
         plt.title(title)
         if ylim is not None:
@@ -519,6 +520,7 @@ class Models:
                  label="Cross-validation score")
 
         plt.legend(loc="best")
+        print(type(plt))
         return plt
 
 
@@ -555,3 +557,13 @@ class Models:
         plt.xlabel('Predicted label')
         plt.tight_layout()
         return plt
+
+    def get_train_sets(self):
+        return self.__x_train,self.__y_train
+
+    def get_confusion_matrix(self):
+        return self.__confussion_matrix
+
+    def get_confusion_matrix_as_dataframe(self):
+        return pd.DataFrame(self.__confussion_matrix, index=[i for i in ["Pred. Good", "Pred. Neutral", "Pred. Bad"]],
+                            columns=[i for i in ["True Good", "True Neutral", "True Bad"]])

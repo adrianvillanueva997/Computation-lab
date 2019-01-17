@@ -1,6 +1,7 @@
 from tkinter import *
-
+from tkinter import ttk
 from matplotlib.figure import Figure
+import seaborn as sn
 
 from proyecto_1.uix import MainScreen as MS
 from proyecto_1.uix import TrainScreen as TS
@@ -72,32 +73,55 @@ class TrainingResultScreen(Frame):
         self.someTitle_lbl.pack()
 
         # center table Frame ------------------------------------------------------------------->
-        self.center_Frame = Frame(self.root, pady=75, bg='#cbccd1')
-        self.confusionMatrix_btn = Button(self.center_Frame, text='Confusion Matrix', bg='#cbccd1',
-                                          command=lambda: send_event("EMPTY"))
-        self.confusionMatrix_btn.config(font=("Courier", 18))
+        #self.center_Frame = Frame(self.root, pady=75, bg='#cbccd1')
 
-            # Matplotlib code
-        # self.dataSpace_text = Text(self.center_Frame)
-        #plot = Models.Models().plot_confusion_matrix()
-        #data_space = FigureCanvasTkAgg(plot, self.center_Frame)
-        #data_space.show()
-        #data_space.get_tk_widget().pack(side=TOP)
+        self.center_Frame = ttk.Notebook(self.root)
 
-        self.confusionMatrix_btn.pack(side=TOP, anchor='nw', pady=5)
-        #self.dataSpace_text.pack(side=TOP)
+        # Matplotlib code Graph 1
+
+        graph1 = Frame(self.center_Frame, bg='#cbccd1')
+
+        df = model.get_confusion_matrix_as_dataframe()
+        print(df)
+
+        figure1 = Figure(figsize=(6, 5), dpi=100)
+        ax1 = figure1.add_subplot(111)
+        bar1 = FigureCanvasTkAgg(figure1, graph1)
+        sn.heatmap(df,ax = ax1, annot=True, cmap="Blues", fmt='g')
+        ax1.set_title('Confusion Matrix')
+
+        bar1.get_tk_widget().pack(side=TOP, fill=BOTH)
+
+        self.center_Frame.add(graph1, text="Confusion Matrix")
+
+        # Matplotlib code Graph 2
+
+        #graph2 = Frame(self.center_Frame, bg='#cbccd1')
+
+        ##df = model.get_confusion_matrix_as_dataframe()
+        ##print(df)
+
+        #figure2 = Figure(figsize=(6, 5), dpi=100)
+        #ax2 = figure1.add_subplot(111)
+        #bar2 = FigureCanvasTkAgg(figure2, graph2)
+        #ax1.set_title('Learning Curve')
+
+        #bar2.get_tk_widget().pack(side=TOP, fill=BOTH)
+        ##plot here
+
+        self.center_Frame.add(graph2, text="Learning Curve")
 
 
         # Bottom left menu
         self.returnMenu_Frame = Frame(self.root, pady=15, bg='#cbccd1')
         self.returnMenu_btn = Button(self.returnMenu_Frame, text='Return to Menu', padx=10,
-                                     command=lambda: send_event("RETURN_TO_MENU"))
+                                     command = lambda: send_event("RETURN_TO_MENU"))
         self.returnMenu_btn.pack(side=LEFT, padx=10)
 
         # Bottom right menu
         self.saveModel_Frame = Frame(self.root, pady=15, bg='#cbccd1')
         self.saveModel_btn = Button(self.saveModel_Frame, text='Save Model & Vectorizer', padx=10,
-                                    command=lambda: send_event("SAVE_MODEL"))
+                                    command = lambda: send_event("SAVE_MODEL"))
         self.saveModel_btn.pack(side=RIGHT, padx=10)
 
         self.exit_Frame.grid(row=0, column=0, columnspan=2, sticky=E)
