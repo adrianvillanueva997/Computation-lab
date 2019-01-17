@@ -7,7 +7,7 @@ from proyecto_1.ETL import Models, Vectorizer, File_Manager
 from tkinter.filedialog import askdirectory,askopenfilename
 
 
-class ClassifyScreenController():
+class ClassifyController():
 
     def handle_event(self, window, command, **kwargs):
         if command == "EXIT":
@@ -101,7 +101,7 @@ class ClassifyScreen(Frame):
         # back-exit Frame ---------------------------------------------------------------------->
         self.exit_Frame = Frame(self.root, bg='#cbccd1') ##cbccd1
 
-        self.controller = ClassifyScreenController()
+        self.controller = ClassifyController()
 
         def send_event(command, **kwargs):
             self.controller.handle_event(self, command, **kwargs)

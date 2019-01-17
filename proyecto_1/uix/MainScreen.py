@@ -4,7 +4,7 @@ from proyecto_1.uix import ClassifyScreen as CS
 from proyecto_1.uix import TrainScreen as TS
 
 
-class MainScreenController():
+class MainController():
 
     def handle_event(self, window, command, **kwargs):
         if command == "EXIT":
@@ -40,7 +40,7 @@ class MainScreen(Frame):
 
         self.exit_Frame = Frame(self.root, padx=10, pady=10, bg='#cbccd1')
 
-        self.controller = MainScreenController()
+        self.controller = MainController()
 
         def send_event(command):
             self.controller.handle_event(self, command)

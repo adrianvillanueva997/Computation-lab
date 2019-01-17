@@ -6,7 +6,7 @@ from proyecto_1.uix import TrainingResultScreen as TRS
 from proyecto_1.ETL import Trainer
 from proyecto_1.ETL import Models
 
-class TrainScreenController():
+class TrainController():
 
     def handle_event(self, window, command, **kwargs):
         if command == "EXIT":
@@ -90,7 +90,7 @@ class TrainScreen(Frame):
 
         self.exit_Frame = Frame(self.root, padx=10, pady=10, bg='#cbccd1')
 
-        self.controller = TrainScreenController()
+        self.controller = TrainController()
 
         def send_event(command, **kwargs):
             self.controller.handle_event(self, command, **kwargs)
