@@ -109,7 +109,7 @@ class TrainingResultScreen(Frame):
         #bar2.get_tk_widget().pack(side=TOP, fill=BOTH)
         ##plot here
 
-        self.center_Frame.add(graph2, text="Learning Curve")
+        #self.center_Frame.add(graph2, text="Learning Curve")
 
 
         # Bottom left menu
