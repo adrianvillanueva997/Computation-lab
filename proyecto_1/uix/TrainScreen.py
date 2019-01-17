@@ -95,10 +95,10 @@ class TrainScreen(Frame):
         def send_event(command, **kwargs):
             self.controller.handle_event(self, command, **kwargs)
 
-        self.exit_btn = Button(self.exit_Frame, text='Exit', padx=5, pady=5, command=lambda: send_event("EXIT"))
+        # self.exit_btn = Button(self.exit_Frame, text='Exit', padx=5, pady=5, command=lambda: send_event("EXIT"))
         self.back_btn = Button(self.exit_Frame, text='Back', padx=5, pady=5, command=lambda: send_event("BACK"))
         # self.exit_btn.config(relief='groove')
-        self.exit_btn.pack(side='right', fill="both", expand=True)
+        # self.exit_btn.pack(side='right', fill="both", expand=True)
         self.back_btn.pack(side='right', fill="both", expand=True)
 
         # some tittle Frame ---------------------------------------------------------------------->
