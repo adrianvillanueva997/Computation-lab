@@ -90,10 +90,10 @@ class ClassifyScreen(Frame):
             self.controller.handle_event(self, command, **kwargs)
 
         self.exitButtons_Frame = Frame(self.exit_Frame, bg='#cbccd1', padx=10, pady=10)
-        self.exit_btn = Button(self.exitButtons_Frame, text='Exit', padx=5, pady=5,cursor='hand2', command=lambda: send_event("EXIT"))
+        # self.exit_btn = Button(self.exitButtons_Frame, text='Exit', padx=5, pady=5,cursor='hand2', command=lambda: send_event("EXIT"))
         self.back_btn = Button(self.exitButtons_Frame, text='Back', padx=5, pady=5,cursor='hand', command=lambda: send_event("BACK"))
         self.exitButtons_Frame.pack(side='right')
-        self.exit_btn.pack(side='right', fill="both", expand=True)
+        # self.exit_btn.pack(side='right', fill="both", expand=True)
         self.back_btn.pack(side='right', fill="both", expand=True)
 
         # some title Frame --------------------------------------------------------------------->
@@ -178,15 +178,15 @@ class ClassifyScreen(Frame):
 
         # Bottom right menu
         #self.rightBtn_Frame = Frame(self.root, bg='lightblue')
-        self.buttonLeft_Frame = Frame(self.root, bg='lightblue')
-        self.importModel_btn = Button(self.buttonLeft_Frame, text='Import Model', padx=10,pady=10,
-                                      command=lambda: send_event("IMPORT_MODEL"),cursor='hand')
-        self.importModel_btn.pack(side=RIGHT)
+        # self.buttonLeft_Frame = Frame(self.root, bg='lightblue')
+        # self.importModel_btn = Button(self.buttonLeft_Frame, text='Import Model', padx=10,pady=10,
+        #                               command=lambda: send_event("IMPORT_MODEL"),cursor='hand')
+        # self.importModel_btn.pack(side=RIGHT)
 
         self.buttonRight_Frame = Frame(self.root, bg='purple')
         self.startTraining_btn = Button(self.buttonRight_Frame, text='Classify', padx=10,pady=10,
                                         command=lambda: send_event("CLASSIFY"),cursor='hand')
-        self.startTraining_btn.pack()
+        self.startTraining_btn.pack(side=RIGHT)
 
         self.exit_Frame.grid(row=0, column=0, columnspan=3, sticky=N+S+W+E)
         self.title_Frame.grid(row=1, column=0, columnspan=3, pady=1, sticky=N+S)
@@ -195,7 +195,7 @@ class ClassifyScreen(Frame):
         #self.unlabeledCenter_Frame.grid(row=2, column=3, sticky=W+E)
         self.selectModel_Frame.grid(row=4, column=0, padx=65, sticky=W)
         #self.rightBtn_Frame.grid()
-        self.buttonLeft_Frame.grid(row=4, column=1, padx=65, sticky=E)
+        # self.buttonLeft_Frame.grid(row=4, column=1, padx=65, sticky=E)
         self.buttonRight_Frame.grid(row=4, column=2, padx=65, sticky=E)
 
         self.root.rowconfigure(2, weight=1)

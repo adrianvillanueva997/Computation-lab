@@ -48,10 +48,10 @@ class MainScreen(Frame):
         # help-exit Frame
         self.exit_Frame = Frame(self.root, bg='#dfdfdf')
 
-        self.exit_btn = Button(self.exit_Frame, text='Exit', padx=5, pady=5, command=lambda: send_event("EXIT"))
+        # self.exit_btn = Button(self.exit_Frame, text='Exit', padx=5, pady=5, command=lambda: send_event("EXIT"))
         self.help_btn = Button(self.exit_Frame, text='Help', padx=5, pady=5, command=lambda: send_event("HELP"))
         # self.exit_btn.config(relief='groove')
-        self.exit_btn.pack(side='right', fill="both", expand=True)
+        # self.exit_btn.pack(side='right', fill="both", expand=True)
         self.help_btn.pack(side='right', fill="both", expand=True)
 
         # img logo Frame
