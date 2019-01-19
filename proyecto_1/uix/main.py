@@ -34,7 +34,7 @@ class Container(Frame):
             widget.destroy()
 
     def previous_frame(self):
-        # NO idea how to do this on tkinter so far
+        # TODO
         pass
 
 

@@ -81,7 +81,7 @@ class TrainingResultScreen(Frame):
 
         graph1 = Frame(self.center_Frame, bg='#cbccd1')
 
-        df = model.get_confusion_matrix_as_dataframe()
+        df = model.get_cm_as_dataframe()
         print(df)
 
         figure1 = Figure(figsize=(6, 5), dpi=100)

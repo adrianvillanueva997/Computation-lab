@@ -37,27 +37,27 @@ class ClassifyController():
         window.selectPath_entry.delete(0, END)
         window.selectPath_entry.insert(END, self.unlabeled_path)
 
-    def select_good(self, window):
-        folder = askdirectory()
-        window.good_Entry.delete(0, END)
-        window.good_Entry.insert(END, folder)
-        print("TODO implement select_path")
-    def select_neutral(self, window):
-        folder = askdirectory()
-        window.neutral_Entry.delete(0, END)
-        window.neutral_Entry.insert(END, folder)
-        print("TODO implement select_path")
-    def select_bad(self, window):
-        folder = askdirectory()
-        window.bad_Entry.delete(0, END)
-        window.bad_Entry.insert(END, folder)
-        print("TODO implement select_path")
+    #def select_good(self, window):
+    #    folder = askdirectory()
+    #    window.good_Entry.delete(0, END)
+    #    window.good_Entry.insert(END, folder)
+    #    print("TODO implement select_path")
+    #def select_neutral(self, window):
+    #    folder = askdirectory()
+    #    window.neutral_Entry.delete(0, END)
+    #    window.neutral_Entry.insert(END, folder)
+    #    print("TODO implement select_path")
+    #def select_bad(self, window):
+    #    folder = askdirectory()
+    #    window.bad_Entry.delete(0, END)
+    #    window.bad_Entry.insert(END, folder)
+    #    print("TODO implement select_path")
 
-    def select_vector(self, window):
-        folder = askdirectory()
-        window.vector_entry.delete(0, END)
-        window.vector_entry.insert(END, folder)
-        print("TODO implement select_path")
+    #def select_vector(self, window):
+    #    folder = askdirectory()
+    #    window.vector_entry.delete(0, END)
+    #    window.vector_entry.insert(END, folder)
+
     def select_model(self, window):
         self.model_path = askopenfilename()
         if str(self.model_path).__contains__('.model'):
