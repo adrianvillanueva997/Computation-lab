@@ -107,7 +107,9 @@ class ClassifyScreen(Frame):
             self.controller.handle_event(self, command, **kwargs)
 
         self.exitButtons_Frame = Frame(self.exit_Frame, bg='#cbccd1', padx=10, pady=10)
-        self.back_btn = Button(self.exitButtons_Frame, text='Back', padx=5, pady=5,cursor='hand2', command=lambda: send_event("BACK"))
+        self.myImg4 = PhotoImage(file='resources/BackButton.png')
+        self.back_btn = Button(self.exitButtons_Frame, image=self.myImg4, cursor='hand2', command=lambda: send_event("BACK"))
+        self.back_btn.configure(highlightthickness = 0, bd = 0)
         # self.exit_btn = Button(self.exitButtons_Frame, text='Exit', padx=5, pady=5,cursor='hand2', command=lambda: send_event("EXIT"))
         self.exitButtons_Frame.pack(side='right')
         # self.exit_btn.pack(side='right', fill="both", expand=True)
@@ -173,7 +175,7 @@ class ClassifyScreen(Frame):
         self.selectModel_Frame = Frame(self.root, pady=15, bg='#cbccd1')
         self.myImgModel = PhotoImage(file='resources/ModelIcon1.png')
         self.imgModel_lbl = Label(self.selectModel_Frame, image=self.myImgModel)
-        self.imgModel_lbl.configure(relief='sunken')
+        self.imgModel_lbl.configure(relief='sunken', highlightthickness = 0, bd = 0)
 
         #self.modelVar.trace('w', self.select_model)
         self.left_Frame = Frame(self.selectModel_Frame)

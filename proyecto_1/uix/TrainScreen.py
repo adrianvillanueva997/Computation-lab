@@ -96,7 +96,9 @@ class TrainScreen(Frame):
             self.controller.handle_event(self, command, **kwargs)
 
         # self.exit_btn = Button(self.exit_Frame, text='Exit', padx=5, pady=5, command=lambda: send_event("EXIT"))
-        self.back_btn = Button(self.exit_Frame, text='Back', padx=5, pady=5, command=lambda: send_event("BACK"))
+        self.myImg4 = PhotoImage(file='resources/BackButton.png')
+        self.back_btn = Button(self.exit_Frame, image=self.myImg4, command=lambda: send_event("BACK"))
+        self.back_btn.configure(bg='#cbccd1', highlightthickness = 0, bd = 0)
         # self.exit_btn.config(relief='groove')
         # self.exit_btn.pack(side='right', fill="both", expand=True)
         self.back_btn.pack(side='right', fill="both", expand=True)
@@ -185,11 +187,13 @@ class TrainScreen(Frame):
         self.popupMenu1.pack(side=LEFT, padx=10)
         # self.selectModel_lbl.pack(side=TOP, padx=10)
 
+
         # start training Button Frame ---------------------------------------------------------------------->
         self.startTraining_Frame = Frame(self.root)
         self.myImg1 = PhotoImage(file='resources/StartTrainingButton.png')
         self.startTraining_btn = Button(self.startTraining_Frame, image=self.myImg1, padx=10, pady=10,
                                         command=lambda: send_event("START_TRAINING"))
+        self.startTraining_btn.configure(highlightthickness = 0, bd = 0)
         self.startTraining_btn.pack()
 
         # position of the mainData frames into the grid ---------------------------------------------------------------------->

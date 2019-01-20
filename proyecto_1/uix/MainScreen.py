@@ -49,15 +49,17 @@ class MainScreen(Frame):
         self.exit_Frame = Frame(self.root, bg='#dfdfdf')
 
         # self.exit_btn = Button(self.exit_Frame, text='Exit', padx=5, pady=5, command=lambda: send_event("EXIT"))
-        self.help_btn = Button(self.exit_Frame, text='Help', padx=5, pady=5, command=lambda: send_event("HELP"))
+        self.myImg5 = PhotoImage(file='resources/HelpButton.png')
+        self.help_btn = Button(self.exit_Frame, image=self.myImg5, command=lambda: send_event("HELP"))
+        self.help_btn.configure(highlightthickness = 0, bd = 0)
         # self.exit_btn.config(relief='groove')
         # self.exit_btn.pack(side='right', fill="both", expand=True)
-        self.help_btn.pack(side='right', fill="both", expand=True)
+        #self.help_btn.pack(side='right', fill="both", expand=True)
 
         # img logo Frame
         self.logo_Frame = Frame(self.root, width=1000, height=800)
 
-        self.myImg = PhotoImage(file='resources/py.png')
+        self.myImg = PhotoImage(file='resources/logo.png')
         self.img_lbl = Label(self.logo_Frame, image=self.myImg)
         self.img_lbl.pack(fill="both", expand=True)
         self.img_lbl.config(bg='#cbccd1')
