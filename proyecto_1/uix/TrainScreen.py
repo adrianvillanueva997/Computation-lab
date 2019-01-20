@@ -19,7 +19,7 @@ class TrainController():
             else:
                 print("ERROR: Needs a parameter \"label\"")
         elif command == "SELECT_MODEL":
-            self.select_model(window)
+            self.load_model_list(window)
         elif command == "START_TRAINING":
             self.start_training(window)
         else:
@@ -46,9 +46,8 @@ class TrainController():
         else:
             print("Path not found!")
         print(folder)
-        print("TODO implement select_path")
 
-    def select_model(self, window):
+    def load_model_list(self, window):
         chosen_model = window.modelVar.get()
         algorithm_list = Models.CHOICES_DICT[chosen_model]
         menu = window.popupMenu1["menu"]
@@ -59,7 +58,6 @@ class TrainController():
 
         window.modelVar1.set(algorithm_list[0])
 
-        print("TODO implement select_model/PASEporAQUI")
         
     def start_training(self, window):
 
