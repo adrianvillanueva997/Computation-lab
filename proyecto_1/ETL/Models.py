@@ -424,7 +424,7 @@ class Models:
                                         filled=True, rounded=True,
                                         special_characters=True)
         graph = graphviz.Source(dot_data)
-        return graph
+        #return graph
 
     def export_model(self, path, model_name):
         try:

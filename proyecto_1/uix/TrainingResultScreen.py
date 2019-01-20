@@ -27,6 +27,8 @@ class TrainingResultController:
             self.goto_previous(window)
         elif command == "RETURN_TO_MENU":
             self.goto_main_menu(window)
+        elif command == "SAVE_PDF":
+            self.save_pdf()
         elif command == "SAVE_MODEL":
             self.save_model()
         else:
@@ -42,6 +44,9 @@ class TrainingResultController:
     def goto_main_menu(self, window):
         window.root.remove_frame()
         MS.MainScreen(window.root)
+
+    def save_pdf(self):
+        save_to = askdirectory()
 
     def save_model(self):
         save_to = askdirectory()
@@ -61,9 +66,11 @@ class TrainingResultScreen(Frame):
         def send_event(command):
             self.controller.handle_event(self, command)
 
-        self.exit_btn = Button(self.exit_Frame, text='Exit', padx=5, pady=5, command=lambda: send_event("EXIT"))
-        self.back_btn = Button(self.exit_Frame, text='Back', padx=5, pady=5, command=lambda: send_event("BACK"))
-        self.exit_btn.pack(side='right', fill="both", expand=True)
+        #self.exit_btn = Button(self.exit_Frame, text='Exit', padx=5, pady=5, command=lambda: send_event("EXIT"))
+        self.myImg5 = PhotoImage(file='resources/BackButton.png')
+        self.back_btn = Button(self.exit_Frame, image=self.myImg5, command=lambda: send_event("BACK"))
+        self.back_btn.configure(highlightthickness = 0, bd = 0)
+        #self.exit_btn.pack(side='right', fill="both", expand=True)
         self.back_btn.pack(side='right', fill="both", expand=True)
 
         # some title Frame --------------------------------------------------------------------->
@@ -120,8 +127,11 @@ class TrainingResultScreen(Frame):
 
         # Bottom right menu
         self.saveModel_Frame = Frame(self.root, pady=15, bg='#cbccd1')
+        self.savePdf_btn = Button(self.saveModel_Frame, text='Save Tree Pdf', padx=10,
+                                  command = lambda : send_event("SAVE_PDF"))
         self.saveModel_btn = Button(self.saveModel_Frame, text='Save Model & Vectorizer', padx=10,
                                     command = lambda: send_event("SAVE_MODEL"))
+        self.savePdf_btn.pack(side=RIGHT, padx=10)
         self.saveModel_btn.pack(side=RIGHT, padx=10)
 
         self.exit_Frame.grid(row=0, column=0, columnspan=2, sticky=E)
