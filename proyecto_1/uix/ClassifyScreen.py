@@ -206,6 +206,7 @@ class ClassifyScreen(Frame):
         self.importModel_btn.pack(side=RIGHT)
 
         self.buttonRight_Frame = Frame(self.root, bg='purple')
+        #self.myImgStart = PhotoImage(file='resources/starClassifyButton.png')
         self.startTraining_btn = Button(self.buttonRight_Frame, text='Classify', padx=10,pady=10,
                                         command=lambda: send_event("CLASSIFY"),cursor='hand2')
         self.startTraining_btn.pack()

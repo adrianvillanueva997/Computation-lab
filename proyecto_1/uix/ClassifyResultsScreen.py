@@ -102,7 +102,7 @@ class ClassifyResultsScreen(Frame):
 
         # Bottom left menu
         self.returnMenu_Frame = Frame(self.root, pady=15, bg='#cbccd1')
-        self.returnMenu_btn = Button(self.returnMenu_Frame, text='Save to Folders', padx=10,
+        self.returnMenu_btn = Button(self.returnMenu_Frame, text='Export to Folders', padx=10,
                                      command=lambda: send_event("EXPORT_TO_FOLDERS"))
         self.saveCsv_btn = Button(self.returnMenu_Frame, text='Export CSV', padx=10,
                                   command=lambda: send_event("EXPORT_TO_CSV"))
