@@ -76,21 +76,24 @@ class ClassifyController():
 
     def classify(self, window):
         #Check if all three fields are not null
-        fm = File_Manager.File_Manager()
-        print(self.unlabeled_path)
-        unlabeled_reviews, u_file_names = fm.extract_data_from_files(self.unlabeled_path)
-        vectorizer = Vectorizer.Vectorizer(u_reviews=unlabeled_reviews)
-        vectorizer.load_vectorizer(self.vocab_path)
-        x_unlabeled = vectorizer.generate_unlabeled_data(u_file_names)
-        model = Models.Models()
-        model.load_model(self.model_path)
-        prediction = model.predict(x_unlabeled)
-        #Prints
-        print(prediction)
-        vectorizer.update_unlabeled_dataframe(predicted_data=prediction)
+        if self.unlabeled_path and self.model_path and self.vocab_path:
+            fm = File_Manager.File_Manager()
+            print(self.unlabeled_path)
+            unlabeled_reviews, u_file_names = fm.extract_data_from_files(self.unlabeled_path)
+            vectorizer = Vectorizer.Vectorizer(u_reviews=unlabeled_reviews)
+            vectorizer.load_vectorizer(self.vocab_path)
+            x_unlabeled = vectorizer.generate_unlabeled_data(u_file_names)
+            model = Models.Models()
+            model.load_model(self.model_path)
+            prediction = model.predict(x_unlabeled)
+            #Prints
+            print(prediction)
+            vectorizer.update_unlabeled_dataframe(predicted_data=prediction)
 
-        window.root.remove_frame()
-        CRS.ClassifyResultsScreen(window.root, vectorizer)
+            window.root.remove_frame()
+            CRS.ClassifyResultsScreen(window.root, vectorizer)
+        else:
+            print("ERROR: Missing path, model, or vocab")
 
 
 class ClassifyScreen(Frame):
@@ -184,7 +187,7 @@ class ClassifyScreen(Frame):
                                 command=lambda: send_event("SELECT_MODEL"),cursor='hand2')
         self.right_Frame = Frame(self.selectModel_Frame)
         self.vector_entry = Entry(self.selectModel_Frame, justify='left')
-        self.vector_btn = Button(self.selectModel_Frame, text='Select Vector', padx=10,
+        self.vector_btn = Button(self.selectModel_Frame, text='Select Vocab', padx=10,
                                 command=lambda: send_event("SELECT_VOCAB"))
 
         self.imgModel_lbl.pack(side=LEFT, padx=5)

@@ -564,6 +564,6 @@ class Models:
     def get_confusion_matrix(self):
         return self.__confussion_matrix
 
-    def get_confusion_matrix_as_dataframe(self):
+    def get_cm_as_dataframe(self):
         return pd.DataFrame(self.__confussion_matrix, index=[i for i in ["Pred. Good", "Pred. Neutral", "Pred. Bad"]],
                             columns=[i for i in ["True Good", "True Neutral", "True Bad"]])
