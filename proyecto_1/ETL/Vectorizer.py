@@ -4,7 +4,7 @@ import pickle
 import matplotlib.pyplot as plt
 import pandas as pd
 from nltk.corpus import stopwords
-from sklearn.feature_extraction.text import CountVectorizer
+from sklearn.feature_extraction.text import CountVectorizer, TfidfVectorizer
 from sklearn.model_selection import train_test_split
 
 from proyecto_1.ETL import Text_Procesing, File_Manager
@@ -78,6 +78,20 @@ class Vectorizer:
         self.__vectorizer = cv
         return x_train, x_test
 
+    def __term_frequency_vectorizer_train(self, x_train, x_test):
+        """
+        Convert a collection of text documents to a matrix of token counts
+        :param to_array:
+        """
+        tp = Text_Procesing.Text_Processing()
+        stop_words = set(stopwords.words('spanish'))
+        cv = TfidfVectorizer(tokenizer=tp.tokenizer, stop_words=stop_words)
+        cv.fit(x_train)
+        x_train = cv.transform(x_train).toarray()
+        x_test = cv.transform(x_test).toarray()
+        self.__vectorizer = cv
+        return x_train, x_test
+
     def export_vectorizer(self, path, model_name):
         try:
             extension = '.vocab'
@@ -126,10 +140,16 @@ class Vectorizer:
     def update_unlabeled_dataframe(self, predicted_data):
         self.__data_frame['labels'] = predicted_data
 
-    def plot_dataframe(self):
-        plot = self.__data_frame['labels'].value_counts().plot('bar')
-        plt.show()
-        return plot
+    def plot_dataframe(self, container=None):
+        if container == None:
+            plot = self.__data_frame['labels'].value_counts().plot('bar')
+            plt.show()
+            return plot
+        else:
+            self.__data_frame['labels'].value_counts().plot(kind="bar", legend=False, ax=container)
+
+
+
 
     def export_dataframe_csv(self, path, model_name):
         try:
@@ -140,7 +160,7 @@ class Vectorizer:
         except Exception as e:
             print(e)
 
-    def export_reviews_to_files(self, g_path, n_path, b_path):
+    def export_reviews_to_files(self, path):
         g_file_count = 1
         n_file_count = 1
         b_file_count = 1
@@ -149,13 +169,35 @@ class Vectorizer:
         b_reviews = self.__data_frame.loc[self.__data_frame['labels'] == 'B']
         n_reviews = self.__data_frame.loc[self.__data_frame['labels'] == 'N']
 
+        if not os.path.exists(os.path.join(path,'good')):
+            os.makedirs(os.path.join(path,'good'))
+        if not os.path.exists(os.path.join(path,'neutral')):
+            os.makedirs(os.path.join(path,'neutral'))
+        if not os.path.exists(os.path.join(path, 'bad')):
+            os.makedirs(os.path.join(path, 'bad'))
+
         for review in g_reviews['reviews']:
-            fm.write_file(text=review, file_name=f'g_review_{str(g_file_count)}', path=g_path)
+            fm.write_file(text=review, file_name=f'g_review_{str(g_file_count)}', path=os.path.join(path, 'good'))
             g_file_count += 1
+
         for review in b_reviews['reviews']:
-            fm.write_file(text=review, file_name=f'b_review_{str(b_file_count)}', path=b_path)
+            fm.write_file(text=review, file_name=f'b_review_{str(b_file_count)}', path=os.path.join(path, 'bad'))
             b_file_count += 1
         for review in n_reviews['reviews']:
-            fm.write_file(text=review, file_name=f'n_review_{str(n_file_count)}', path=n_path)
+            fm.write_file(text=review, file_name=f'n_review_{str(n_file_count)}', path=os.path.join(path, 'neutral'))
             n_file_count += 1
         print(f'[INFO] Exported: \nGood: {str(g_file_count)} \nBad: {str(b_file_count)} \nNeutral: {str(n_file_count)}')
+
+    def __term_frequency_vectorizer_train(self, x_train, x_test):
+        """
+        Convert a collection of text documents to a matrix of token counts
+        :param to_array:
+        """
+        tp = Text_Procesing.Text_Processing()
+        stop_words = set(stopwords.words('spanish'))
+        cv = TfidfVectorizer(tokenizer=tp.tokenizer, stop_words=stop_words)
+        cv.fit(x_train)
+        x_train = cv.transform(x_train).toarray()
+        x_test = cv.transform(x_test).toarray()
+        self.__vectorizer = cv
+        return x_train, x_test

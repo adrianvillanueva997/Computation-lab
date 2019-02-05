@@ -6,7 +6,7 @@ from proyecto_1.uix import TrainingResultScreen as TRS
 from proyecto_1.ETL import Trainer
 from proyecto_1.ETL import Models
 
-class TrainScreenController():
+class TrainController():
 
     def handle_event(self, window, command, **kwargs):
         if command == "EXIT":
@@ -19,7 +19,7 @@ class TrainScreenController():
             else:
                 print("ERROR: Needs a parameter \"label\"")
         elif command == "SELECT_MODEL":
-            self.select_model(window)
+            self.load_model_list(window)
         elif command == "START_TRAINING":
             self.start_training(window)
         else:
@@ -46,9 +46,8 @@ class TrainScreenController():
         else:
             print("Path not found!")
         print(folder)
-        print("TODO implement select_path")
 
-    def select_model(self, window):
+    def load_model_list(self, window):
         chosen_model = window.modelVar.get()
         algorithm_list = Models.CHOICES_DICT[chosen_model]
         menu = window.popupMenu1["menu"]
@@ -59,7 +58,6 @@ class TrainScreenController():
 
         window.modelVar1.set(algorithm_list[0])
 
-        print("TODO implement select_model/PASEporAQUI")
         
     def start_training(self, window):
 
@@ -74,13 +72,12 @@ class TrainScreenController():
         if path_label_neutral and path_label_good and path_label_bad:
             model, vectorizer = Trainer.train(path_label_good,path_label_neutral,path_label_bad,
                                 window.modelVar.get(),window.modelVar1.get())
-
+            #Change window
             window.root.remove_frame()
             TRS.TrainingResultScreen(window.root, model, vectorizer)
         else:
             print(f"ERROR: Unvalid path or paths \n{path_label_good}\n{path_label_neutral}\n{path_label_bad}")
 
-        # Change window when it's over
 
 
 
@@ -91,15 +88,17 @@ class TrainScreen(Frame):
 
         self.exit_Frame = Frame(self.root, padx=10, pady=10, bg='#cbccd1')
 
-        self.controller = TrainScreenController()
+        self.controller = TrainController()
 
         def send_event(command, **kwargs):
             self.controller.handle_event(self, command, **kwargs)
 
-        self.exit_btn = Button(self.exit_Frame, text='Exit', padx=5, pady=5, command=lambda: send_event("EXIT"))
-        self.back_btn = Button(self.exit_Frame, text='Back', padx=5, pady=5, command=lambda: send_event("BACK"))
+        # self.exit_btn = Button(self.exit_Frame, text='Exit', padx=5, pady=5, command=lambda: send_event("EXIT"))
+        self.myImg4 = PhotoImage(file='resources/BackButton.png')
+        self.back_btn = Button(self.exit_Frame, image=self.myImg4, command=lambda: send_event("BACK"))
+        self.back_btn.configure(bg='#cbccd1', highlightthickness = 0, bd = 0)
         # self.exit_btn.config(relief='groove')
-        self.exit_btn.pack(side='right', fill="both", expand=True)
+        # self.exit_btn.pack(side='right', fill="both", expand=True)
         self.back_btn.pack(side='right', fill="both", expand=True)
 
         # some tittle Frame ---------------------------------------------------------------------->
@@ -111,24 +110,24 @@ class TrainScreen(Frame):
 
         # Select Path Frame ---------------------------------------------------------------------->
         self.selectPath_Frame = Frame(self.root)
-        self.selectPath_Frame.config(bg='#cbccd1')
+        self.selectPath_Frame.config(bg='#cbccd1')#cbccd1
         # self.center_Canvas = Canvas(self.selectPath_Frame, bg='#b8b8b8')
         # self.center_Canvas.pack()
 
         self.selectPathTable_Frame = Frame(self.selectPath_Frame)
-        self.selectPathTable_Frame.pack(fill=BOTH, pady=150)
+        self.selectPathTable_Frame.pack(fill=BOTH, pady=100)
         # Good - Neutral - Bad icons
-        self.myImgHappy = PhotoImage(file='resources/happyIcon.png')
+        self.myImgHappy = PhotoImage(file='resources/GoodIcon.png')
         self.imgModelHappy_lbl = Label(self.selectPathTable_Frame, image=self.myImgHappy)
         self.imgModelHappy_lbl.config(bg='#eaeaea')
 
-        self.myImgNeutral = PhotoImage(file='resources/neutralIcon.png')
+        self.myImgNeutral = PhotoImage(file='resources/NeutralIcon.png')
         self.imgModelNeutral_lbl = Label(self.selectPathTable_Frame, image=self.myImgNeutral)
         self.imgModelNeutral_lbl.config(bg='#eaeaea')
 
-        self.myImgSad = PhotoImage(file='resources/sadIcon.png')
+        self.myImgSad = PhotoImage(file='resources/BadIcon.png')
         self.imgModelSad_lbl = Label(self.selectPathTable_Frame, image=self.myImgSad)
-        self.imgModelSad_lbl.config(pady=10, bg='#eaeaea')
+        self.imgModelSad_lbl.config(bg='#eaeaea')
         # Path Entry + button
         self.selectGood_entry = Entry(self.selectPathTable_Frame, justify='left')
         self.selectButton_btn = Button(self.selectPathTable_Frame, text='Select Path',
@@ -158,7 +157,7 @@ class TrainScreen(Frame):
         self.selectModelGrid_Frame = Frame(self.selectModel_Frame)
         self.selectModelGrid_Frame.pack(side='left', anchor='n')
         # img left Frame
-        self.myImgModel = PhotoImage(file='resources/selectModel.png')
+        self.myImgModel = PhotoImage(file='resources/ModelIcon.png')
         self.imgModel_lbl = Label(self.selectModelGrid_Frame, image=self.myImgModel)
         # self.imgModel_lbl.pack(fill="both", expand=True)
         self.imgModel_lbl.config(bg='#eaeaea')
@@ -186,11 +185,13 @@ class TrainScreen(Frame):
         self.popupMenu1.pack(side=LEFT, padx=10)
         # self.selectModel_lbl.pack(side=TOP, padx=10)
 
+
         # start training Button Frame ---------------------------------------------------------------------->
         self.startTraining_Frame = Frame(self.root)
-
-        self.startTraining_btn = Button(self.startTraining_Frame, text='Start Training', padx=10, pady=10,
+        self.myImg1 = PhotoImage(file='resources/StartTrainingButton.png')
+        self.startTraining_btn = Button(self.startTraining_Frame, image=self.myImg1, padx=10, pady=10,
                                         command=lambda: send_event("START_TRAINING"))
+        self.startTraining_btn.configure(highlightthickness = 0, bd = 0)
         self.startTraining_btn.pack()
 
         # position of the mainData frames into the grid ---------------------------------------------------------------------->

@@ -4,7 +4,7 @@ from proyecto_1.uix import ClassifyScreen as CS
 from proyecto_1.uix import TrainScreen as TS
 
 
-class MainScreenController():
+class MainController():
 
     def handle_event(self, window, command, **kwargs):
         if command == "EXIT":
@@ -40,7 +40,7 @@ class MainScreen(Frame):
 
         self.exit_Frame = Frame(self.root, padx=10, pady=10, bg='#cbccd1')
 
-        self.controller = MainScreenController()
+        self.controller = MainController()
 
         def send_event(command):
             self.controller.handle_event(self, command)
@@ -48,22 +48,24 @@ class MainScreen(Frame):
         # help-exit Frame
         self.exit_Frame = Frame(self.root, bg='#dfdfdf')
 
-        self.exit_btn = Button(self.exit_Frame, text='Exit', padx=5, pady=5, command=lambda: send_event("EXIT"))
-        self.help_btn = Button(self.exit_Frame, text='Help', padx=5, pady=5, command=lambda: send_event("HELP"))
+        # self.exit_btn = Button(self.exit_Frame, text='Exit', padx=5, pady=5, command=lambda: send_event("EXIT"))
+        self.myImg5 = PhotoImage(file='resources/HelpButton.png')
+        self.help_btn = Button(self.exit_Frame, image=self.myImg5, command=lambda: send_event("HELP"))
+        self.help_btn.configure(highlightthickness = 0, bd = 0)
         # self.exit_btn.config(relief='groove')
-        self.exit_btn.pack(side='right', fill="both", expand=True)
-        self.help_btn.pack(side='right', fill="both", expand=True)
+        # self.exit_btn.pack(side='right', fill="both", expand=True)
+        #self.help_btn.pack(side='right', fill="both", expand=True)
 
         # img logo Frame
         self.logo_Frame = Frame(self.root, width=1000, height=800)
 
-        self.myImg = PhotoImage(file='resources/py.png')
+        self.myImg = PhotoImage(file='resources/logo.png')
         self.img_lbl = Label(self.logo_Frame, image=self.myImg)
         self.img_lbl.pack(fill="both", expand=True)
         self.img_lbl.config(bg='#cbccd1')
 
         # Three Dudes Inc. logo
-        self.tdiName_Frame = Frame(self.root)
+        self.tdiName_Frame = Frame(self.root, bg='#cbccd1')
 
         self.tdiName_lbl = Label(self.tdiName_Frame, text='Three Dudes Inc.', bg='#cbccd1', pady=20)
         self.tdiName_lbl.config(font=("Courier", 34))
@@ -77,10 +79,10 @@ class MainScreen(Frame):
         # self.btn_left_Frame.pack(side='left', fill="both", expand=True)
         # self.btn_right_Frame.pack(side='right', fill="both", expand=True)
 
-        self.myImg1 = PhotoImage(file='resources/training.png')
+        self.myImg1 = PhotoImage(file='resources/TrainingButton.png')
         self.entrenamiento_btn = Button(self.btn_left_Frame, image=self.myImg1, padx='5', pady='5',
                                         command=lambda: send_event("TRAINING"))
-        self.myImg2 = PhotoImage(file='resources/class.png')
+        self.myImg2 = PhotoImage(file='resources/ClassifyButton.png')
         self.clasificador_btn = Button(self.btn_right_Frame, image=self.myImg2, padx='5', pady='5',
                                        command=lambda: send_event("CLASSIFY"))
         # self.entrenamiento_btn = Button(self.btn_left_Frame, text='Entrenamiento',padx='10',pady='10')
